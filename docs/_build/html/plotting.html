@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plotting examples &mdash; pyClim 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="src" href="modules.html" />
+    <link rel="prev" title="How to use" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            pyClim
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Sections:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">How to use</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Plotting examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#loading-the-example-data">Loading the example data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-a-timeseries-of-anomalies">Plotting a timeseries of anomalies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-accumulated-anomalies">Plotting accumulated anomalies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#computing-and-plotting-record-values">Computing and plotting record values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plotting-data-versus-the-climatological-normal-values">Plotting data versus the climatological normal values</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyClim</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Plotting examples</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/plotting.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="plotting-examples">
+<h1>Plotting examples<a class="headerlink" href="#plotting-examples" title="Link to this heading"></a></h1>
+<p>The examples below show how pyClim can be used to make plots. The examples do not cover the whole functionalities of pyClim, but a subset of the most important plotting features. This documentation will be updated progressively to include the remaining functionalities.</p>
+<p>All of the examples below make use of the example dataset included in this package, which the user can use for testing purposes.</p>
+<section id="loading-the-example-data">
+<h2>Loading the example data<a class="headerlink" href="#loading-the-example-data" title="Link to this heading"></a></h2>
+<p>The first step for plotting is, of course, to load the data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grouper</span><span class="p">,</span><span class="n">DataFrame</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span><span class="p">,</span> <span class="n">interpolate</span><span class="p">,</span> <span class="n">signal</span>
+
+<span class="c1"># Import pyclim</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyclim_test</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Load the example data</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/data/&#39;</span> <span class="o">%</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="n">csvfiles</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;example_data.txt&#39;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">csvfiles</span><span class="p">)</span>
+
+<span class="c1"># Create metadata</span>
+<span class="n">metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="s1">&#39;example&#39;</span><span class="p">,</span><span class="s1">&#39;example&#39;</span><span class="p">,</span><span class="mf">361.00</span><span class="p">,</span><span class="o">-</span><span class="mf">361.00</span><span class="p">,</span><span class="mi">461</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Estacion&#39;</span><span class="p">,</span><span class="s1">&#39;Codigo&#39;</span><span class="p">,</span><span class="s1">&#39;latitud_OK&#39;</span><span class="p">,</span><span class="s1">&#39;longitud_OK&#39;</span><span class="p">,</span><span class="s1">&#39;Altitud&#39;</span><span class="p">]</span>
+
+<span class="c1"># Some useful variables</span>
+<span class="n">year_to_plot</span> <span class="o">=</span> <span class="mi">2025</span>
+<span class="n">climate_normal_period</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1991</span><span class="p">,</span><span class="mi">2020</span><span class="p">]</span>
+<span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tmin&#39;</span><span class="p">,</span><span class="s1">&#39;Tmean&#39;</span><span class="p">,</span><span class="s1">&#39;Tmax&#39;</span><span class="p">,</span> <span class="s1">&#39;Rainfall&#39;</span><span class="p">,</span> <span class="s1">&#39;WindSpeed&#39;</span><span class="p">]</span>
+<span class="n">database</span> <span class="o">=</span> <span class="s1">&#39;Example&#39;</span>
+
+<span class="c1"># Mapping variables</span>
+<span class="n">units_list</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1">#[&#39;ºC&#39;,&#39;ºC&#39;,&#39;ºC&#39;, &#39;m/s&#39;]</span>
+<span class="n">units_list</span><span class="p">[</span><span class="s1">&#39;Tmin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ºC&#39;</span>
+<span class="n">units_list</span><span class="p">[</span><span class="s1">&#39;Tmean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ºC&#39;</span>
+<span class="n">units_list</span><span class="p">[</span><span class="s1">&#39;Tmax&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ºC&#39;</span>
+<span class="n">units_list</span><span class="p">[</span><span class="s1">&#39;Rainfall&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mm&#39;</span>
+<span class="n">units_list</span><span class="p">[</span><span class="s1">&#39;WindSpeed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m/s&#39;</span>
+
+<span class="n">wd_map</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;N&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;NNE&#39;</span><span class="p">:</span><span class="mf">22.5</span><span class="p">,</span> <span class="s1">&#39;NE&#39;</span><span class="p">:</span><span class="mi">45</span><span class="p">,</span> <span class="s1">&#39;ENE&#39;</span><span class="p">:</span><span class="mf">67.5</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">:</span><span class="mi">90</span><span class="p">,</span> <span class="s1">&#39;ESE&#39;</span><span class="p">:</span><span class="mf">112.5</span><span class="p">,</span> <span class="s1">&#39;SE&#39;</span><span class="p">:</span><span class="mi">125</span><span class="p">,</span> <span class="s1">&#39;SSE&#39;</span><span class="p">:</span><span class="mf">147.5</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span><span class="mi">180</span><span class="p">,</span> <span class="s1">&#39;SSW&#39;</span><span class="p">:</span><span class="mf">202.5</span><span class="p">,</span> <span class="s1">&#39;SW&#39;</span><span class="p">:</span><span class="mi">225</span><span class="p">,</span> <span class="s1">&#39;WSW&#39;</span><span class="p">:</span><span class="mf">247.5</span><span class="p">,</span> <span class="s1">&#39;W&#39;</span><span class="p">:</span><span class="mi">270</span><span class="p">,</span> <span class="s1">&#39;WNW&#39;</span><span class="p">:</span><span class="mf">292.5</span><span class="p">,</span> <span class="s1">&#39;NW&#39;</span><span class="p">:</span><span class="mi">315</span><span class="p">,</span> <span class="s1">&#39;NNW&#39;</span><span class="p">:</span><span class="mf">337.5</span><span class="p">}</span>
+
+<span class="c1"># Select metadata</span>
+<span class="n">metadatos_sta</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="n">metadata</span><span class="o">.</span><span class="n">ID</span> <span class="o">==</span> <span class="s1">&#39;example&#39;</span><span class="p">]</span>
+<span class="n">codigo_sta</span> <span class="o">=</span> <span class="n">metadatos_sta</span><span class="o">.</span><span class="n">ID</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1">#nombres_mod[listanombres] = nombres_mod[listanombres].replace(&#39;/&#39;,&#39;-&#39;)</span>
+<span class="n">station_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">metadatos_sta</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">station_name</span> <span class="o">=</span> <span class="n">station_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+
+<span class="n">plotdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span><span class="s1">&#39;plots/</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span><span class="p">(</span><span class="n">database</span><span class="p">,</span><span class="s1">&#39;example&#39;</span><span class="p">))</span>
+<span class="n">plotdir</span> <span class="o">=</span> <span class="n">plotdir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">plotdir</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">plotdir</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Creation of the directory </span><span class="si">%s</span><span class="s2"> failed&quot;</span> <span class="o">%</span> <span class="n">plotdir</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Successfully created the directory </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">plotdir</span><span class="p">)</span>
+
+
+<span class="c1"># Read data</span>
+<span class="n">input_file</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">csvfiles</span> <span class="k">if</span> <span class="n">codigo_sta</span> <span class="ow">in</span> <span class="n">x</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span><span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">decimal</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;latin-1&#39;</span><span class="p">)</span>
+
+<span class="n">df1</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+
+<span class="n">df1</span><span class="p">[</span><span class="s1">&#39;Day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">day</span>
+<span class="n">df1</span><span class="p">[</span><span class="s1">&#39;Month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">month</span>
+<span class="n">df1</span><span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">year</span>
+<span class="n">df1</span><span class="p">[</span><span class="s1">&#39;Accumpcp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">year</span><span class="p">)[</span><span class="s1">&#39;Rainfall&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="plotting-a-timeseries-of-anomalies">
+<h2>Plotting a timeseries of anomalies<a class="headerlink" href="#plotting-a-timeseries-of-anomalies" title="Link to this heading"></a></h2>
+<p>The ‘freq’ parameter allows to choose the temporal aggregation of the anomalies. For example, for daily anomalies use freq=’1D’:</p>
+<img alt="_images/daily_anomalies_Tmean.png" src="_images/daily_anomalies_Tmean.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_anomalies</span><span class="p">(</span><span class="n">df1_complete</span><span class="p">,</span> <span class="s1">&#39;Tmean&#39;</span><span class="p">,</span> <span class="s1">&#39;ºC&#39;</span><span class="p">,</span> <span class="n">climate_normal_period</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">station_name</span><span class="p">,</span> <span class="n">plotdir</span><span class="o">+</span><span class="s1">&#39;/daily_anomalies_Tmean.png&#39;</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;1D&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And for monthly anomalies, freq=’1ME’:</p>
+<img alt="_images/monthly_anomalies_Tmean.png" src="_images/monthly_anomalies_Tmean.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_anomalies</span><span class="p">(</span><span class="n">df1_complete</span><span class="p">,</span> <span class="s1">&#39;Tmean&#39;</span><span class="p">,</span> <span class="s1">&#39;ºC&#39;</span><span class="p">,</span> <span class="n">climate_normal_period</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">station_name</span><span class="p">,</span> <span class="n">plotdir</span><span class="o">+</span><span class="s1">&#39;/monthly_anomalies_Tmean.png&#39;</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;1ME&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="plotting-accumulated-anomalies">
+<h2>Plotting accumulated anomalies<a class="headerlink" href="#plotting-accumulated-anomalies" title="Link to this heading"></a></h2>
+<p>Use the <code class="xref py py-func docutils literal notranslate"><span class="pre">pyclim.plot_accumulated_anomalies()</span></code> function to plot the accumulated anomalies during a year. Again, the ‘freq’ parameter allows the user to vary the temporal aggregation of the accumulated anomalies.</p>
+<p>Accumulated anomalies from day to day:</p>
+<img alt="_images/Tmean_accum_anoms_daily.png" src="_images/Tmean_accum_anoms_daily.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_accumulated_anomalies</span><span class="p">(</span><span class="n">df1_complete</span><span class="p">,</span> <span class="s1">&#39;Tmean&#39;</span><span class="p">,</span> <span class="s1">&#39;ºC&#39;</span><span class="p">,</span> <span class="mi">2025</span><span class="p">,</span> <span class="n">climate_normal_period</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">station_name</span><span class="p">,</span> <span class="n">plotdir</span><span class="o">+</span><span class="s1">&#39;/Tmean_accum_anoms_daily.png&#39;</span><span class="p">,</span><span class="n">freq</span><span class="o">=</span><span class="s1">&#39;1D&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Weekly accumulated anomalies:</p>
+<img alt="_images/Tmean_accum_anoms_weekly.png" src="_images/Tmean_accum_anoms_weekly.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_accumulated_anomalies</span><span class="p">(</span><span class="n">df1_complete</span><span class="p">,</span> <span class="s1">&#39;Tmean&#39;</span><span class="p">,</span> <span class="s1">&#39;ºC&#39;</span><span class="p">,</span> <span class="mi">2025</span><span class="p">,</span> <span class="n">climate_normal_period</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">station_name</span><span class="p">,</span> <span class="n">plotdir</span><span class="o">+</span><span class="s1">&#39;/Tmean_accum_anoms_daily.png&#39;</span><span class="p">,</span><span class="n">freq</span><span class="o">=</span><span class="s1">&#39;1D&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Monthly accumulated anomalies:</p>
+<img alt="_images/Tmean_accum_anoms_monthly.png" src="_images/Tmean_accum_anoms_monthly.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_accumulated_anomalies</span><span class="p">(</span><span class="n">df1_complete</span><span class="p">,</span> <span class="s1">&#39;Tmean&#39;</span><span class="p">,</span> <span class="s1">&#39;ºC&#39;</span><span class="p">,</span> <span class="mi">2025</span><span class="p">,</span> <span class="n">climate_normal_period</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">station_name</span><span class="p">,</span> <span class="n">plotdir</span><span class="o">+</span><span class="s1">&#39;/Tmean_accum_anoms_daily.png&#39;</span><span class="p">,</span><span class="n">freq</span><span class="o">=</span><span class="s1">&#39;1D&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="computing-and-plotting-record-values">
+<h2>Computing and plotting record values<a class="headerlink" href="#computing-and-plotting-record-values" title="Link to this heading"></a></h2>
+<p>For computing the record values, use the <code class="xref py py-func docutils literal notranslate"><span class="pre">pyclim.compute_daily_records()</span></code> function. Then, one can plot the evolution of the number of high and low records with <code class="xref py py-func docutils literal notranslate"><span class="pre">pyclim.plot_records_count()</span></code>. The following example illustrates how to compute and plot the number of days in each year exceeding a daily record.</p>
+<img alt="_images/annual_records_Tmean.png" src="_images/annual_records_Tmean.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot data from a certain period versus the climatological normal</span>
+<span class="n">records_df_allvars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df1_complete</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">variables</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">variables</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">)))):</span>
+    <span class="n">variable</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df1_complete</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&amp;</span> <span class="nb">set</span><span class="p">(</span><span class="n">variables</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">variables</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">))[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">units</span> <span class="o">=</span> <span class="n">units_list</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span>
+    <span class="n">enddate</span> <span class="o">=</span> <span class="n">datetoday</span>
+    <span class="c1">#plot data</span>
+    <span class="n">plot_data_vs_climate</span><span class="p">(</span><span class="n">df1_complete</span><span class="p">,</span><span class="n">climate_df_sep</span><span class="p">,</span><span class="n">variable</span><span class="p">,</span><span class="n">units</span><span class="p">,</span><span class="n">ndaysago</span><span class="p">,</span><span class="n">enddate</span><span class="p">,</span><span class="n">cmap_anom_bars</span><span class="p">,</span>
+                         <span class="n">database</span><span class="p">,</span><span class="n">climate_normal_period</span><span class="p">,</span> <span class="n">station_name</span><span class="p">,</span> <span class="n">plotdir</span><span class="o">+</span><span class="s1">&#39;/</span><span class="si">%s</span><span class="s1">periodtimeseries_climatemedian19912020.png&#39;</span> <span class="o">%</span><span class="n">variable</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">fillcolor_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="n">multiyearrecords_df_allvars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>    <span class="c1"># For saving multiple variable records&#39; DataFrames</span>
+
+<span class="n">varis</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tmax&#39;</span><span class="p">,</span><span class="s1">&#39;Tmean&#39;</span><span class="p">,</span><span class="s1">&#39;Rainfall&#39;</span><span class="p">]</span>
+<span class="n">units_varis</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">varis</span><span class="p">)):</span>
+    <span class="n">units_varis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">units_list</span><span class="p">[</span><span class="n">varis</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+
+    <span class="n">multiyearrecords_df</span> <span class="o">=</span> <span class="n">compute_daily_records</span><span class="p">(</span><span class="n">df1_complete</span><span class="p">,</span> <span class="n">varis</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">df1_complete</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span> <span class="c1"># Compute records for variable</span>
+    <span class="n">multiyearrecords_df_allvars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">multiyearrecords_df_allvars</span><span class="p">,</span> <span class="n">multiyearrecords_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="c1"># Plot annual records</span>
+<span class="n">plot_records_count</span><span class="p">(</span><span class="n">multiyearrecords_df_allvars</span><span class="p">,</span> <span class="s1">&#39;Tmean&#39;</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">station_name</span><span class="p">,</span> <span class="n">plotdir</span><span class="o">+</span><span class="s1">&#39;/annual_records_Tmean.png&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;day&#39;</span><span class="p">)</span> <span class="c1"># Plot number of days exceeding daily records</span>
+</pre></div>
+</div>
+<p>Once more, the user can set the temporal frequency of the records’ aggregation. In the next example, the number of monthly records exceeded during each year are plotted:</p>
+<img alt="_images/monthly_records_Tmean.png" src="_images/monthly_records_Tmean.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plot_records_count</span><span class="p">(</span><span class="n">multiyearrecords_df_allvars</span><span class="p">,</span> <span class="s1">&#39;Tmean&#39;</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">station_name</span><span class="p">,</span> <span class="n">plotdir</span><span class="o">+</span><span class="s1">&#39;/annual_records_Tmean.png&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">)</span> <span class="c1"># Plot number of days exceeding daily records</span>
+</pre></div>
+</div>
+</section>
+<section id="plotting-data-versus-the-climatological-normal-values">
+<h2>Plotting data versus the climatological normal values<a class="headerlink" href="#plotting-data-versus-the-climatological-normal-values" title="Link to this heading"></a></h2>
+<p>One interesting functionality of the pyClim package is the ability to plot data versus its climatological normal values, including the occurrence of record values given that a DataFrame including records is provided.</p>
+<img alt="_images/Tmeantimeseries_climatemedian19912020_withrecords.png" src="_images/Tmeantimeseries_climatemedian19912020_withrecords.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">colors_anom_bars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#34b1eb&#39;</span><span class="p">,</span><span class="s1">&#39;#eb4034&#39;</span><span class="p">]</span>
+<span class="n">levels_anom_bars</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">cmap_anom_bars</span> <span class="o">=</span> <span class="n">get_continuous_cmap</span><span class="p">(</span><span class="n">colors_anom_bars</span><span class="p">,</span> <span class="n">levels_anom_bars</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># Only works with HEX colors</span>
+
+<span class="c1"># Plot data from a certain period versus the climatological normal</span>
+<span class="n">variable</span> <span class="o">=</span> <span class="s1">&#39;Tmean&#39;</span>
+<span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;ºC&#39;</span>
+<span class="n">inidate</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">enddate</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">31</span><span class="p">)</span>
+<span class="c1"># Without records</span>
+<span class="n">plot_data_vs_climate</span><span class="p">(</span><span class="n">df1_complete</span><span class="p">,</span><span class="n">climate_df_sep</span><span class="p">,</span><span class="n">variable</span><span class="p">,</span><span class="n">units</span><span class="p">,</span><span class="n">inidate</span><span class="p">,</span><span class="n">enddate</span><span class="p">,</span><span class="n">cmap_anom_bars</span><span class="p">,</span>
+                        <span class="n">database</span><span class="p">,</span><span class="n">climate_normal_period</span><span class="p">,</span> <span class="n">station_name</span><span class="p">,</span> <span class="n">plotdir</span><span class="o">+</span><span class="s1">&#39;/</span><span class="si">%s</span><span class="s1">periodtimeseries_climatemedian19912020.png&#39;</span> <span class="o">%</span><span class="n">variable</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">fillcolor_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># With records</span>
+<span class="n">plot_data_vs_climate_withrecords</span><span class="p">(</span><span class="n">df1_complete</span><span class="p">,</span><span class="n">climate_df_sep</span><span class="p">,</span><span class="n">multiyearrecords_df_allvars</span><span class="p">,</span><span class="s1">&#39;Tmean&#39;</span><span class="p">,</span><span class="s1">&#39;ºC&#39;</span><span class="p">,</span><span class="n">inidate</span><span class="p">,</span><span class="n">enddate</span><span class="p">,</span><span class="n">cmap_anom_bars</span><span class="p">,</span>
+                                            <span class="n">database</span><span class="p">,</span><span class="n">climate_normal_period</span><span class="p">,</span> <span class="n">station_name</span><span class="p">,</span> <span class="n">plotdir</span><span class="o">+</span><span class="s1">&#39;/</span><span class="si">%s</span><span class="s1">timeseries_climatemedian19912020_withrecords.png&#39;</span> <span class="o">%</span><span class="n">varis</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">fillcolor_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-left" title="How to use" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="src" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Alejandro Rodríguez Sánchez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

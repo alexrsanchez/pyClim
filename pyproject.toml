@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyclim_test"
+version = "0.0.8"
+authors = [
+  { name="Alejandro Rodríguez Sánchez", email="ars.rodriguezs@gmail.com" },
+]
+maintainers = [
+{ name="Alejandro Rodríguez Sánchez", email="ars.rodriguezs@gmail.com" }
+]
+description = "A Python package that makes analysing climatological data easy, and pretty!"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+dependencies = [
+        'pandas',
+        'seaborn',
+        'numpy',
+        'matplotlib',
+        'scipy',
+        'pre-commit',
+]
+keywords = ["climate", "timeseries", "plotting"]
+
+[project.urls]
+Homepage = "https://https://github.com/alexrsanchez/pyclim"
+Issues = "https://https://github.com/alexrsanchez/pyclim/issues"
