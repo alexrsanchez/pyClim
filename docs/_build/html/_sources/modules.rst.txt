@@ -1,5 +1,5 @@
-src
-===
+pyClim
+======
 
 .. toctree::
    :maxdepth: 4

@@ -20,4 +20,3 @@ pyclim.pyclim module
    :members:
    :show-inheritance:
    :undoc-members:
-

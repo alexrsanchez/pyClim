@@ -1,7 +1,7 @@
 .. pyClim documentation master file, created by
    sphinx-quickstart on Fri Jan 30 13:41:02 2026.
    You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive. 
+   contain the root `toctree` directive.
 
 .. Add your content using ``reStructuredText`` syntax. See the
 .. `reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
@@ -11,6 +11,7 @@
 Welcome to pyClim's documentation!
 ==================================
 
+.. image:: pyClim_logo.png
 
 
 .. toctree::
@@ -21,11 +22,3 @@ Welcome to pyClim's documentation!
    usage
    plotting
    modules
-
-
-Indices and tables
-===============================
-
-* :ref:'genindex'
-* :ref:'modindex'
-* :ref:'search'

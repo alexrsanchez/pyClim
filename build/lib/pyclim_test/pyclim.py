@@ -68,11 +68,11 @@ def quality_control(df,vars_to_check, t_units='C', wind_units='m/s'):
 
         elif var in ['windspeed', 'wspd']:
             df[var] = df[var].where(df[var] <= upper_wind_limit[wind_units], np.nan)
-        
+
         #### QUALITY CONTROL 2: REMOVE unrealistic values (above or below 5 times the standard deviation)
         df_std = df.groupby(['Month', 'Day']).std(numeric_only=True).rename(columns={var:var+'_std'})[var+'_std']
         df_mean = df.groupby(['Month', 'Day']).mean(numeric_only=True).rename(columns={var:var+'_mean'})[var+'_mean']
-        
+
         df_var = df[[var, 'Month', 'Day']].merge(df_std, on=['Month', 'Day'])
         df_var = df_var.merge(df_mean, on=['Month', 'Day'])
         df_var.index = df.index
@@ -82,7 +82,7 @@ def quality_control(df,vars_to_check, t_units='C', wind_units='m/s'):
 
         df_var[var] = df_var[var].where((df_var[var] <= df_var['mean+5std']) & (df_var[var] >= df_var['mean-5std']) , np.nan)
         df[var] = df_var[var]
-    
+
     return df
 
 def compute_climate(df, variables, climate_period, separate_df=True):
@@ -135,13 +135,13 @@ def compute_climate(df, variables, climate_period, separate_df=True):
 
 def fill_between_colormap(x,y1,y2,cmap, **kwargs):
     cmap = matplotlib.cm.get_cmap('RdBu_r')
-    
+
     xx = x.values
     yy1 = y1.values
     yy2 = y2.values
-    
+
     yy = yy1 - yy2
-    
+
     extreme_value = max(abs(np.nanmin(yy)),abs(np.nanmax(yy)))
 
     normalize = matplotlib.colors.Normalize(vmin=-extreme_value, vmax=extreme_value)
@@ -217,7 +217,7 @@ def compute_daily_records_oneyear(df, variable, year_to_compute):
     c = c[~((c.index.get_level_values(0) == 2) & (c.index.get_level_values(1) == 29))] # Remove leap day
     c.columns = [variable+'_Daymax', variable+'_Monmax', variable+'_Daymin', variable+'_Monmin',
                  variable+'_%i' %year_to_compute]
-    
+
     # Fill columns with daily, monthly and absolute records
     c[variable+'_dayrmax'] = c[variable+'_%i' %year_to_compute].where(c[variable+'_%i' %year_to_compute] > c['%s_Daymax' %variable])
     c[variable+'_dayrmin'] = c[variable+'_%i' %year_to_compute].where(c[variable+'_%i' %year_to_compute] < c['%s_Daymin' %variable])
@@ -299,7 +299,7 @@ def compute_daily_records(df, variable, years):
         c = c[~((c.index.get_level_values(0) == 2) & (c.index.get_level_values(1) == 29))] # Remove leap day
         c.columns = [variable+'_Daymax', variable+'_Monmax', variable+'_Daymin', variable+'_Monmin',
                      variable+'_%i' %y]
-           
+
         # Fill columns with daily, monthly and absolute records
         c[variable+'_dayrmax'] = c[variable+'_%i' %y].where(c[variable+'_%i' %y] > c['%s_Daymax' %variable])
         c[variable+'_dayrmin'] = c[variable+'_%i' %y].where(c[variable+'_%i' %y] < c['%s_Daymin' %variable])
@@ -315,7 +315,7 @@ def compute_daily_records(df, variable, years):
         c[variable+'_absrmax_diff'] = c[variable+'_%i' %y] - absmax
         c[variable+'_absrmin_diff'] = c[variable+'_%i' %y] - absmin
 
-        
+
         dates = pd.date_range(pd.to_datetime('01-01-%i' %y, format='%d-%m-%Y'), pd.to_datetime('31-12-%i' %y, format='%d-%m-%Y'), freq='1D')
         dates = dates[~((dates.day ==29) & (dates.month == 2))]
         c = c.reset_index(drop=True).set_index(dates)
@@ -346,7 +346,7 @@ def plot_records_count(records_df, variable, database, station_name, filename, f
     fig, (ax1) = plt.subplots(1, 1, sharex=True, figsize=(10,7))
     # plot the same data on both axes
     records_df.plot(kind='line', ax=ax1, color={"%s_%srmax" %(variable, var[freq]): "red", "%s_%srmin" %(variable, var[freq]): 'blue'}, markeredgecolor='black', markersize=80)
-    
+
     ax1.grid(color='black', alpha=0.3)
     ax1.set_ylabel('Frequency (days)', fontsize=15)
     ax1.set_xlabel('')
@@ -464,7 +464,7 @@ def compute_and_plot_exceedances(df, variable, database, station_name, filename,
             exceedances['Year'] = exceedances.index.year
 
             exceedances=exceedances.groupby(['season', 'Year']).sum(numeric_only=True).reset_index()
-    
+
         season_names = ['December-January-February', 'March-April-May', 'June-July-August', 'September-October-November']# ['DJF', 'MAM', 'JJA', 'SON']
         fig, ax = plt.subplots(figsize=(15,10), ncols=2, nrows=2, sharex=True)
         ax= ax.flatten()
@@ -488,11 +488,11 @@ def compute_and_plot_exceedances(df, variable, database, station_name, filename,
             ax[j].grid(color='grey')
             ax[j].set_title(season_names[j], fontsize=17)
             ax[j].tick_params(axis='both', labelsize=15)
-        
+
         if plot_means == True:
             ax[3].legend(fontsize=14,ncol=1)
-        ax[0].set_ylabel('exceedances', fontsize=15)           
-        ax[2].set_ylabel('exceedances', fontsize=15)           
+        ax[0].set_ylabel('exceedances', fontsize=15)
+        ax[2].set_ylabel('exceedances', fontsize=15)
 
 
         plt.text(0.03, 0.925, 'Period with data: %i-%i' %(df.index.year.min(),df.index.year.max()), fontsize=14, transform=plt.gcf().transFigure)
@@ -551,7 +551,7 @@ def compute_and_plot_exceedances(df, variable, database, station_name, filename,
         ax[6].set_ylabel('exceedances', fontsize=16)
         ax[9].set_ylabel('exceedances', fontsize=16)
 
-        
+
         plt.text(0.03, 0.94, 'Period with data: %i-%i' %(df.index.year.min(),df.index.year.max()), fontsize=14, transform=plt.gcf().transFigure)
         plt.text(0.8, 0.96, 'Database: %s' %database, fontsize=14, transform=plt.gcf().transFigure)
         plt.text(0.8, 0.94, 'Location: %s' %station_name, fontsize=14, transform=plt.gcf().transFigure)
@@ -559,7 +559,7 @@ def compute_and_plot_exceedances(df, variable, database, station_name, filename,
 
         fig.suptitle('Monthly exceedances of %s=%1.f' %(variable,threshold), fontsize=24)
         fig.savefig(filename,dpi=300)
-       
+
 def plot_variable_trends(df, var, units, filename, database, station_name, averaging_period=5, grouping='year', grouping_stat='mean', rain_limit=1, plot_kind='line'):
     '''
     This function allows to plot and compare the annual meteogram of a certain year (year_to_plot) with the climatological normal
@@ -641,7 +641,7 @@ def plot_variable_trends(df, var, units, filename, database, station_name, avera
             'DJF'
         ])
         grp_ary = month_to_season_lu[df.index.month]
-        df['season'] = grp_ary 
+        df['season'] = grp_ary
         df_winter = df[df.season == 'DJF'].groupby(['Year']).apply(grouping_stat, numeric_only=True)
         df_spring = df[df.season == 'MAM'].groupby(['Year']).apply(grouping_stat, numeric_only=True)
         df_summer = df[df.season == 'JJA'].groupby(['Year']).apply(grouping_stat, numeric_only=True)
@@ -773,7 +773,7 @@ def plot_data_vs_climate(df,df_climate,variable,units,inidate,enddate,colormap,d
     show_bands: boolean
         If True, shows bands representing the standard deviation or the range of percentiles 10th to 90th
     show_seasons: boolean
-        If true, the background is plotted with different colors for each climatological season    
+        If true, the background is plotted with different colors for each climatological season
     '''
 
     if climate_stat.lower() not in ['median', 'mean']:
@@ -865,7 +865,7 @@ def plot_data_vs_climate(df,df_climate,variable,units,inidate,enddate,colormap,d
     plt.text(0.825, 0.925, 'Location: %s' %station_name, fontsize=12, transform=plt.gcf().transFigure)
     plt.savefig(filename,dpi=300)
 
-    
+
 def plot_data_vs_climate_withrecords(df,df_climate,records_df,variable,units,inidate,enddate,colormap,database,climate_normal_period, station_name, filename, kind='line', climate_stat='median', fillcolor_gradient=False, use_std=True, show_bands = True, show_seasons=True):
     '''
     This function allows to plot climatological data against the climatological mean or median of one variable, and shows when a record value has been broken.
@@ -907,14 +907,14 @@ def plot_data_vs_climate_withrecords(df,df_climate,records_df,variable,units,ini
     show_bands: boolean
         If True, shows bands representing the standard deviation or the range of percentiles 10th to 90th
     show_seasons: boolean
-        If true, the background is plotted with different colors for each climatological season    
+        If true, the background is plotted with different colors for each climatological season
     '''
 
     if climate_stat.lower() not in ['median', 'mean']:
         raise ValueError('"climate_stat" should be equal to "median" or "mean"')
     locator = mdates.MonthLocator() #minticks=3, maxticks=12)
     formatter = mdates.ConciseDateFormatter(locator)
-    fig, ax = plt.subplots(figsize=(15,7)) 
+    fig, ax = plt.subplots(figsize=(15,7))
     if kind == 'line':
         ax.plot(df.loc[inidate:enddate, variable].index, df.loc[inidate:enddate, variable],color='black')
         median, = ax.plot(df_climate.loc[inidate:enddate, '%s_%s' %(variable, climate_stat)].index, df_climate.loc[inidate:enddate,'%s_%s' %(variable, climate_stat)],color="#000000",label='Climate %s' %climate_stat)
@@ -962,7 +962,7 @@ def plot_data_vs_climate_withrecords(df,df_climate,records_df,variable,units,ini
 
     else:
         raise ValueError('kind must be "line" or "bar".')
-    
+
     # Daily records
     records_df = records_df.loc[inidate:enddate,:]
     drmax = ax.scatter(records_df[records_df['%s_monrmax' %variable].isnull()].index, records_df[records_df['%s_monrmax' %variable].isnull()]['%s_dayrmax' %(variable)], color='red', marker='o', edgecolor='black', label='Days with high record: %i' %records_df['%s_dayrmax' %(variable)].count())
@@ -974,7 +974,7 @@ def plot_data_vs_climate_withrecords(df,df_climate,records_df,variable,units,ini
     absrmax = ax.scatter(records_df.index, records_df['%s_absrmax' %(variable)], color='red', marker='*', s=70, edgecolor='black', label='Days above absolute high record: %i' %records_df['%s_absrmax' %(variable)].count())
     absrmin = ax.scatter(records_df.index, records_df['%s_absrmin' %(variable)], color='blue', marker='*', s=70, edgecolor='black', label='Days below absolute low record: %i' %records_df['%s_absrmin' %(variable)].count())
 
-    
+
     ax.grid(color='black',alpha=0.5)
     ax.set_ylabel('%s (%s)' %(variable, units), fontsize=17)
     ax.set_title('Daily %s during period: %s to %s' %(variable, df.loc[inidate:enddate].index[0].strftime('%d-%m-%Y'), df.loc[inidate:enddate].index[-1].strftime('%d-%m-%Y')),fontsize=16)
@@ -997,7 +997,7 @@ def plot_data_vs_climate_withrecords(df,df_climate,records_df,variable,units,ini
 
     # Create another legend for the records.
     ax.legend(handles=[drmax, drmin, mrmax, mrmin, absrmax, absrmin], loc='upper center', ncol=3)
-    
+
     ax.xaxis.set_major_locator(locator)
     ax.xaxis.set_major_formatter(formatter)
     ax.set_xlim([inidate - dt.timedelta(days=1), enddate + dt.timedelta(days=1)])
@@ -1066,7 +1066,7 @@ def plot_data_vs_climate_withrecords_multivar(df,df_climate,records_df,vars_list
     show_bands: boolean
         If True, shows bands representing the standard deviation or the range of percentiles 10th to 90th
     show_seasons: boolean
-        If true, the background is plotted with different colors for each climatological season    
+        If true, the background is plotted with different colors for each climatological season
     '''
 
     if len(vars_list) < 2:
@@ -1079,7 +1079,7 @@ def plot_data_vs_climate_withrecords_multivar(df,df_climate,records_df,vars_list
 
 
     records_df = records_df.loc[inidate:enddate,:]
-    
+
     locator = mdates.MonthLocator() #minticks=3, maxticks=12)
     formatter = mdates.ConciseDateFormatter(locator)
     fig, axs = plt.subplots(nrows=2,ncols=1,figsize=(15,7),sharex=True)
@@ -1140,13 +1140,13 @@ def plot_data_vs_climate_withrecords_multivar(df,df_climate,records_df,vars_list
                 ax[1].bar(df.loc[inidate:enddate, vars_list[1]].index[mask2], df.loc[inidate:enddate, vars_list[1]][mask2], color='#996100', edgecolor='black',linewidth=1)
             if len(mask3[mask3 == True]) > 0:
                 ax[1].bar(df.loc[inidate:enddate, vars_list[1]].index[mask3], df.loc[inidate:enddate, vars_list[1]][mask3], color='black', edgecolor='black',linewidth=1)
-               
+
         # Daily records
         drmax1 = ax[1].scatter(records_df[records_df['%s_monrmax' %(vars_list[1])].isnull()].index, records_df[records_df['%s_monrmax' %(vars_list[1])].isnull()]['%s_dayrmax' %(vars_list[1])], color='red', marker='o', s=20, edgecolor='black', label='Days with high record: %i' %records_df['%s_dayrmax' %(vars_list[1])].count(), zorder=100)
         drmin1 = ax[1].scatter(records_df[records_df['%s_monrmin' %(vars_list[1])].isnull()].index, records_df[records_df['%s_monrmin' %(vars_list[1])].isnull()]['%s_dayrmin' %(vars_list[1])], color='blue', marker='o', s=20, edgecolor='black', label='Days with low record: %i' %records_df['%s_dayrmin' %(vars_list[1])].count(), zorder=100)
         # Monthly records
         mrmax1 = ax[1].scatter(records_df[records_df['%s_absrmax' %(vars_list[1])].isnull()].index, records_df[records_df['%s_absrmax' %(vars_list[1])].isnull()]['%s_monrmax' %(vars_list[1])], color='red', marker='^', s=30, edgecolor='black', label='Days above monthly high record: %i' %records_df['%s_monrmax' %(vars_list[1])].count(), zorder=101)
-        mrmin1 = ax[1].scatter(records_df[records_df['%s_absrmin' %(vars_list[1])].isnull()].index, records_df[records_df['%s_absrmin' %(vars_list[1])].isnull()]['%s_monrmin' %(vars_list[1])], color='blue', marker='^', s=30, edgecolor='black', label='Days below monthly low record: %i' %records_df['%s_monrmin' %(vars_list[1])].count(), zorder=101) 
+        mrmin1 = ax[1].scatter(records_df[records_df['%s_absrmin' %(vars_list[1])].isnull()].index, records_df[records_df['%s_absrmin' %(vars_list[1])].isnull()]['%s_monrmin' %(vars_list[1])], color='blue', marker='^', s=30, edgecolor='black', label='Days below monthly low record: %i' %records_df['%s_monrmin' %(vars_list[1])].count(), zorder=101)
         # Absolute records
         absrmax1 = ax[1].scatter(records_df.index, records_df['%s_absrmax' %(vars_list[1])], color='red', marker='*', s=50, edgecolor='black', label='Days above absolute high record: %i' %records_df['%s_absrmax' %(vars_list[1])].count(), zorder=102)
         absrmin1 = ax[1].scatter(records_df.index, records_df['%s_absrmin' %(vars_list[1])], color='blue', marker='*', s=50, edgecolor='black', label='Days below absolute low record: %i' %records_df['%s_absrmin' %(vars_list[1])].count(), zorder=102)
@@ -1166,7 +1166,7 @@ def plot_data_vs_climate_withrecords_multivar(df,df_climate,records_df,vars_list
             ax[0].bar(df_climate.loc[inidate:enddate, '%s_%s' %(vars_list[0], climate_stat)].index[mask1], bottom=df_climate.loc[inidate:enddate,'%s_%s' %(vars_list[0], climate_stat)][mask1], height = diff_var[mask1], color = colormap([-1000]), alpha=0.7)
         if len(mask2[mask2 == True]) > 0:
             ax[0].bar(df_climate.loc[inidate:enddate, '%s_%s' %(vars_list[0], climate_stat)].index[mask2], bottom=df_climate.loc[inidate:enddate,'%s_%s' %(vars_list[0], climate_stat)][mask2], height = diff_var[mask2], color = colormap([1000]), alpha=0.7)
-        
+
         if show_bands == True:
             if use_std == False:
                 ax[0].plot(df_climate.loc[inidate:enddate, '%s_p010' %vars_list[0]].index,df_climate.loc[inidate:enddate,'%s_p010' %vars_list[0]],linestyle='-',lw=1,color='grey',label="_nolegend")
@@ -1188,10 +1188,10 @@ def plot_data_vs_climate_withrecords_multivar(df,df_climate,records_df,vars_list
         absrmax = ax[0].scatter(records_df.index, records_df['%s_absrmax' %(vars_list[0])], color='red', marker='*', s=50, edgecolor='black', label='Days above absolute high record: %i' %records_df['%s_absrmax' %(vars_list[0])].count())
         absrmin = ax[0].scatter(records_df.index, records_df['%s_absrmin' %(vars_list[0])], color='blue', marker='*', s=50, edgecolor='black', label='Days below absolute low record: %i' %records_df['%s_absrmin' %(vars_list[0])].count())
 
-        
+
         ax[0].grid(color='black',alpha=0.5)
         ax[0].set_ylabel('%s (%s)' %(vars_list[0], units_list[0]), fontsize=17)
-        
+
         if vars_list[1] != 'Rainfall':
             median1, = ax[1].plot(df_climate.loc[inidate:enddate, '%s_%s' %(vars_list[1], climate_stat)].index, df_climate.loc[inidate:enddate,'%s_%s' %(vars_list[1], climate_stat)],color="#47fe60",label='Climate %s' %climate_stat)
 #            median1, = ax[1].plot(df_climate.loc[inidate:enddate, vars_list[1]].index, df_climate.loc[inidate:enddate,'%s_%s' %(vars_list[1], climate_stat)],color="#47fe60",label='Climate %s' %climate_stat)
@@ -1203,26 +1203,26 @@ def plot_data_vs_climate_withrecords_multivar(df,df_climate,records_df,vars_list
                 ax[1].bar(df_climate.loc[inidate:enddate, '%s_%s' %(vars_list[1], climate_stat)].index[mask1], bottom=df_climate.loc[inidate:enddate,'%s_%s' %(vars_list[1], climate_stat)][mask1], height = diff_var[mask1], color = colormap([-1000]), alpha=0.7)
             if len(mask2[mask2 == True]) > 0:
                 ax[1].bar(df_climate.loc[inidate:enddate, '%s_%s' %(vars_list[1], climate_stat)].index[mask2], bottom=df_climate.loc[inidate:enddate,'%s_%s' %(vars_list[1], climate_stat)][mask2], height = diff_var[mask2], color = colormap([1000]), alpha=0.7)
-                        
+
         else:
             diff_var1 = df.loc[inidate:enddate, vars_list[1]] - df_climate.loc[inidate:enddate,'%s_%s' %(vars_list[1], climate_stat)]
             mask1 = diff_var1 > 0
             mask2 = diff_var1 < 0
             mask3 = diff_var1 == 0
-    
+
             if len(mask1[mask1 == True]) > 0:
                 ax[1].bar(df.loc[inidate:enddate, vars_list[1]].index[mask1], df.loc[inidate:enddate, vars_list[1]][mask1], color='#32a852', edgecolor='black',linewidth=0.8)
             if len(mask2[mask2 == True]) > 0:
                 ax[1].bar(df.loc[inidate:enddate, vars_list[1]].index[mask2], df.loc[inidate:enddate, vars_list[1]][mask2], color='#996100', edgecolor='black',linewidth=0.8)
             if len(mask3[mask3 == True]) > 0:
                 ax[1].bar(df.loc[inidate:enddate, vars_list[1]].index[mask3], df.loc[inidate:enddate, vars_list[1]][mask3], color='black', edgecolor='black',linewidth=0.8)
-        
+
         # Daily records
         drmax1 = ax[1].scatter(records_df[records_df['%s_monrmax' %(vars_list[1])].isnull()].index, records_df[records_df['%s_monrmax' %(vars_list[1])].isnull()]['%s_dayrmax' %(vars_list[1])], color='red', marker='o', s=20, edgecolor='black', label='Days with high record: %i' %records_df['%s_dayrmax' %(vars_list[1])].count())
         drmin1 = ax[1].scatter(records_df[records_df['%s_monrmin' %(vars_list[1])].isnull()].index, records_df[records_df['%s_monrmin' %(vars_list[1])].isnull()]['%s_dayrmin' %(vars_list[1])], color='blue', marker='o', s=20, edgecolor='black', label='Days with low record: %i' %records_df['%s_dayrmin' %(vars_list[1])].count())
         # Monthly records
         mrmax1 = ax[1].scatter(records_df[records_df['%s_absrmax' %(vars_list[1])].isnull()].index, records_df[records_df['%s_absrmax' %(vars_list[1])].isnull()]['%s_monrmax' %(vars_list[1])], color='red', marker='^', s=30, edgecolor='black', label='Days above monthly high record: %i' %records_df['%s_monrmax' %(vars_list[1])].count())
-        mrmin1 = ax[1].scatter(records_df[records_df['%s_absrmin' %(vars_list[1])].isnull()].index, records_df[records_df['%s_absrmin' %(vars_list[1])].isnull()]['%s_monrmin' %(vars_list[1])], color='blue', marker='^', s=30, edgecolor='black', label='Days below monthly low record: %i' %records_df['%s_monrmin' %(vars_list[1])].count())       
+        mrmin1 = ax[1].scatter(records_df[records_df['%s_absrmin' %(vars_list[1])].isnull()].index, records_df[records_df['%s_absrmin' %(vars_list[1])].isnull()]['%s_monrmin' %(vars_list[1])], color='blue', marker='^', s=30, edgecolor='black', label='Days below monthly low record: %i' %records_df['%s_monrmin' %(vars_list[1])].count())
         # Absolute records
         absrmax1 = ax[1].scatter(records_df.index, records_df['%s_absrmax' %(vars_list[1])], color='red', marker='*', s=50, edgecolor='black', label='Days above absolute high record: %i' %records_df['%s_absrmax' %(vars_list[1])].count())
         absrmin1 = ax[1].scatter(records_df.index, records_df['%s_absrmin' %(vars_list[1])], color='blue', marker='*', s=50, edgecolor='black', label='Days below absolute low record: %i' %records_df['%s_absrmin' %(vars_list[1])].count())
@@ -1235,7 +1235,7 @@ def plot_data_vs_climate_withrecords_multivar(df,df_climate,records_df,vars_list
         raise ValueError('kind must be "line" or "bar".')
 
     fig.suptitle(x=0.5,y=0.95, t='%s and %s during period %s to %s' %(vars_list[0], vars_list[1], df.loc[inidate:enddate].index[0].strftime('%d-%b-%Y'), df.loc[inidate:enddate].index[-1].strftime('%d-%b-%Y')),fontsize=16)
-    
+
     # Legends
     # Create a legend for the median.
     if show_bands == True:
@@ -1249,7 +1249,7 @@ def plot_data_vs_climate_withrecords_multivar(df,df_climate,records_df,vars_list
 
     # Create another legend for the records.
     ax[0].legend(handles=[drmax, drmin, mrmax, mrmin, absrmax, absrmin], loc='upper center', ncol=3)
-    
+
     #ax[0].legend(loc='upper center',ncol=4).set_visible(True)
     if vars_list[1] != 'Rainfall':
         # Create a legend for the median.
@@ -1258,7 +1258,7 @@ def plot_data_vs_climate_withrecords_multivar(df,df_climate,records_df,vars_list
         ax[1].add_artist(first_legend)
 
         # Create another legend for the records.
-        ax[1].legend(handles=[drmax1, drmin1, mrmax1, mrmin1, absrmax1, absrmin1], loc='upper center', ncol=3)    
+        ax[1].legend(handles=[drmax1, drmin1, mrmax1, mrmin1, absrmax1, absrmin1], loc='upper center', ncol=3)
     else:
         ax[1].legend(loc='upper center', ncol=3).set_visible(True)
 
@@ -1269,7 +1269,7 @@ def plot_data_vs_climate_withrecords_multivar(df,df_climate,records_df,vars_list
                            bbox_transform=ax[0].transAxes, prop={'size': 12}, frameon=True)
     text.patch.set_alpha(0.5)
 
-    ax[0].add_artist(text)   
+    ax[0].add_artist(text)
     ax[0].xaxis.set_major_locator(locator)
     ax[0].xaxis.set_major_formatter(formatter)
     ax[0].set_xlim([inidate - dt.timedelta(days=1), enddate + dt.timedelta(days=1)])
@@ -1294,7 +1294,7 @@ def plot_data_vs_climate_withrecords_multivar(df,df_climate,records_df,vars_list
     plt.subplots_adjust(hspace=0.1, bottom=0.06, left=0.1, right=0.9)
     fig.savefig(filename,dpi=300)
 
-    
+
 
 def plot_periodaverages(df, df_climate, var, units, inidate, enddate, station_name, database, plotdir, kind='line', stat='median', window=10, use_std=False):
     '''
@@ -1337,15 +1337,15 @@ def plot_periodaverages(df, df_climate, var, units, inidate, enddate, station_na
     ### Visualizador de datos de un periodo concreto
     df['to_select_dates'] = 100*df.index.month + df.index.day
 
-    first_selected_day = df.index[(df.index.day == inidate.day) & 
+    first_selected_day = df.index[(df.index.day == inidate.day) &
                                                  (df.index.month == inidate.month)]
 
-    last_selected_day = df.index[(df.index.day == enddate.day) & 
+    last_selected_day = df.index[(df.index.day == enddate.day) &
                                                  (df.index.month == enddate.month)]
     selected_dates = []
     for i in range(len(last_selected_day)):
         selected_dates.append(pd.date_range(first_selected_day[i],last_selected_day[i]))
-        
+
     selected_dates = np.unique(selected_dates)
 
     # Los datos de los días seleccionados
@@ -1385,7 +1385,7 @@ def plot_periodaverages(df, df_climate, var, units, inidate, enddate, station_na
     ax.tick_params(axis='both', labelsize=14)
     ax.set_xlabel('',fontsize=12)
     ax.set_ylabel('%s (%s)' %(var,units),fontsize=15)
-    ax.set_title('%s %s. Reference period: %s to %s' 
+    ax.set_title('%s %s. Reference period: %s to %s'
                   %(stat,var,dt.datetime.strftime(inidate,format='%d-%b'),
                     dt.datetime.strftime(enddate,format='%d-%b')),fontsize=18)
     plt.legend(bbox_to_anchor=(1.0, -0.10),ncol=4,fontsize=12).set_visible(True)
@@ -1404,7 +1404,7 @@ def plot_periodaverages(df, df_climate, var, units, inidate, enddate, station_na
 
 
 #def plot_movingaverages(df,df_climate):
-    
+
 
 
 def plot_data_and_accum_anoms(df,df_climate,year_to_plot,vars_list,units_list,colormap,database,climate_normal_period, station_name, plotdir, climate_stat='median', secondplot_type='accum', w=7, show_seasons=True):
@@ -1442,13 +1442,13 @@ def plot_data_and_accum_anoms(df,df_climate,year_to_plot,vars_list,units_list,co
     secondplot_type: str
         Type of the second plot (accum or moving)
     show_seasons: boolean
-        If true, the background is plotted with different colors for each climatological season    
+        If true, the background is plotted with different colors for each climatological season
     '''
 
 
     if len(vars_list) < 1:
         raise ValueError('len(vars_list) must be greater or equal than 1. Your vars_list has a length of: %i' %len(vars_list))
-    
+
     if secondplot_type not in ['accum','moving']:
         raise ValueError('"anom_type" must be either "accum" or "moving".')
 
@@ -1457,7 +1457,7 @@ def plot_data_and_accum_anoms(df,df_climate,year_to_plot,vars_list,units_list,co
 
     if df.index.month[-1] != 12 or df.index.month[-1] != 31:
         df = df.reindex(pd.date_range('%i-01-01' %year_to_plot, '%i-12-31' %year_to_plot, freq='1D'))
-    
+
     if df_climate.index.month[-1] != 12 or df_climate.index.month[-1] != 31:
         df_climate = df_climate.reindex(pd.date_range('%i-01-01' %year_to_plot, '%i-12-31' %year_to_plot, freq='1D'))
 
@@ -1473,7 +1473,7 @@ def plot_data_and_accum_anoms(df,df_climate,year_to_plot,vars_list,units_list,co
         mask2 = diff_var >= 0
         ax[0].bar(df_climate.loc[df_climate.index.year == year_to_plot,'%s_%s' %(vars_list[i], climate_stat)].index[mask1], bottom=df_climate.loc[df_climate.index.year == year_to_plot,'%s_%s' %(vars_list[i], climate_stat)][mask1], height = diff_var[mask1], color = colormap([-1000]), alpha=0.7)
         ax[0].bar(df_climate.loc[df_climate.index.year == year_to_plot,'%s_%s' %(vars_list[i], climate_stat)].index[mask2], bottom=df_climate.loc[df_climate.index.year == year_to_plot,'%s_%s' %(vars_list[i], climate_stat)][mask2], height = diff_var[mask2], color = colormap([1000]), alpha=0.7)
-            
+
 
         ax[0].grid(color='black',alpha=0.5)
         ax[0].set_ylabel('%s (%s)' %(vars_list[i], units_list[i]), fontsize=17)
@@ -1500,7 +1500,7 @@ def plot_data_and_accum_anoms(df,df_climate,year_to_plot,vars_list,units_list,co
 
             fig.suptitle(x=0.5,y=0.94, t='%s and %i-period MA of anomaly during period %s to %s' %(vars_list[i], w, dt.datetime(year_to_plot,1,1).strftime('%d-%b-%Y'), dt.datetime(year_to_plot,12,31).strftime('%d-%b-%Y')),fontsize=16)
 
-        
+
         # Legends
         ax[0].legend(loc='upper left',ncol=1).set_visible(True)
         ax[1].legend(loc='upper left', ncol=1).set_visible(True)
@@ -1511,7 +1511,7 @@ def plot_data_and_accum_anoms(df,df_climate,year_to_plot,vars_list,units_list,co
                             bbox_transform=ax[0].transAxes, prop={'size': 12}, frameon=True)
         text.patch.set_alpha(0.5)
 
-        ax[0].add_artist(text)   
+        ax[0].add_artist(text)
         ax[0].xaxis.set_major_locator(locator)
         ax[0].xaxis.set_major_formatter(formatter)
         ax[0].set_xlim([dt.datetime(year_to_plot,1,1) - dt.timedelta(days=1), dt.datetime(year_to_plot,12,31) + dt.timedelta(days=1)])
@@ -1572,19 +1572,19 @@ def plot_data_and_yearly_cycle(df,df_climate,year_to_plot,vars_list,units_list,c
     fillcolor_gradient: boolean
         Parameter that controls the way the colormap is employed. If true, the colormap is continue
     show_seasons: boolean
-        If true, the background is plotted with different colors for each climatological season    
+        If true, the background is plotted with different colors for each climatological season
     '''
 
 
     if len(vars_list) < 1:
         raise ValueError('len(vars_list) must be greater or equal than 1. Your vars_list has a length of: %i' %len(vars_list))
-    
+
     df = df[df.index.year == year_to_plot]
     df_climate = df_climate[df_climate.index.year == year_to_plot]
 
     if df.index.month[-1] != 12 or df.index.month[-1] != 31:
         df = df.reindex(pd.date_range('%i-01-01' %year_to_plot, '%i-12-31' %year_to_plot, freq='1D'))
-    
+
     if df_climate.index.month[-1] != 12 or df_climate.index.month[-1] != 31:
         df_climate = df_climate.reindex(pd.date_range('%i-01-01' %year_to_plot, '%i-12-31' %year_to_plot, freq='1D'))
 
@@ -1602,7 +1602,7 @@ def plot_data_and_yearly_cycle(df,df_climate,year_to_plot,vars_list,units_list,c
 
             ax[0].bar(df_climate.loc[df_climate.index.year == year_to_plot,'%s_%s' %(vars_list[i], climate_stat)].index[mask1], bottom=df_climate.loc[df_climate.index.year == year_to_plot,'%s_%s' %(vars_list[i], climate_stat)][mask1], height = diff_var[mask1], color = colormap([-1000]), alpha=0.7)
             ax[0].bar(df_climate.loc[df_climate.index.year == year_to_plot,'%s_%s' %(vars_list[i], climate_stat)].index[mask2], bottom=df_climate.loc[df_climate.index.year == year_to_plot,'%s_%s' %(vars_list[i], climate_stat)][mask2], height = diff_var[mask2], color = colormap([1000]), alpha=0.7)
-                
+
 
             ax[0].grid(color='black',alpha=0.5)
             ax[0].set_ylabel('%s (%s)' %(vars_list[i], units_list[i]), fontsize=17)
@@ -1670,7 +1670,7 @@ def plot_data_and_yearly_cycle(df,df_climate,year_to_plot,vars_list,units_list,c
             mask1 = diff_var1 > 0
             mask2 = diff_var1 < 0
             mask3 = diff_var1 = 0
-    
+
             ax[0].bar(df.loc[df.index.year == year_to_plot, vars_list[i]].index[mask1], df.loc[df.index.year == year_to_plot, vars_list[i]][mask1], color='#32a852', edgecolor='black',linewidth=0.8)
             ax[0].bar(df.loc[df.index.year == year_to_plot, vars_list[i]].index[mask2], df.loc[df.index.year == year_to_plot, vars_list[i]][mask2], color='#996100', edgecolor='black',linewidth=0.8)
             ax[0].bar(df.loc[df.index.year == year_to_plot, vars_list[i]].index[mask3], df.loc[df.index.year == year_to_plot, vars_list[i]][mask3], color='black', edgecolor='black',linewidth=0.8)
@@ -1703,8 +1703,8 @@ def plot_data_and_yearly_cycle(df,df_climate,year_to_plot,vars_list,units_list,c
 
             fig.suptitle(x=0.5,y=0.94, t='Timeseries of %s and accumulated mean during period %s to %s' %(vars_list[i], dt.datetime(year_to_plot,1,1).strftime('%d-%b-%Y'), dt.datetime(year_to_plot,12,31).strftime('%d-%b-%Y')),fontsize=16)
 
-        
-        # Legends        
+
+        # Legends
         ax[0].legend(loc='upper left',ncol=1).set_visible(True)
         ax[1].legend(loc='upper left', ncol=1).set_visible(True)
         ax[0].tick_params(labelsize=14)
@@ -1714,7 +1714,7 @@ def plot_data_and_yearly_cycle(df,df_climate,year_to_plot,vars_list,units_list,c
                             bbox_transform=ax[0].transAxes, prop={'size': 12}, frameon=True)
         text.patch.set_alpha(0.5)
 
-        ax[0].add_artist(text)   
+        ax[0].add_artist(text)
         ax[0].xaxis.set_major_locator(locator)
         ax[0].xaxis.set_major_formatter(formatter)
         ax[0].set_xlim([dt.datetime(year_to_plot,1,1) - dt.timedelta(days=1), dt.datetime(year_to_plot,12,31) + dt.timedelta(days=1)])
@@ -1788,7 +1788,7 @@ def plot_timeseries(df, df_climate, var, units, climate_normal_period, database,
         ax.set_title('Timeseries of %s MA [%i-%i]' %(var,df.index.year.min(),df.index.year.max()),fontsize=20)
 
     ax.legend(bbox_to_anchor=(1, -0.10),ncol=3,fontsize=12).set_visible(True)
-    ax.set_xlim([df.index[0]-dt.timedelta(days=15),df.index[-1]+dt.timedelta(days=15)])   
+    ax.set_xlim([df.index[0]-dt.timedelta(days=15),df.index[-1]+dt.timedelta(days=15)])
     fig.autofmt_xdate()
     plt.text(0.03, 0.955, 'Climate normal period: %i-%i' %(climate_normal_period[0],climate_normal_period[1]), fontsize=12, transform=plt.gcf().transFigure)
     plt.text(0.03, 0.925, 'Period with data: %i-%i' %(df.index.year.min(),df.index.year.max()), fontsize=12, transform=plt.gcf().transFigure)
@@ -1838,42 +1838,42 @@ def timeseries_extremevalues(df, var, units, climate_normal_period, database, st
         'DJF'
     ])
     grp_ary = month_to_season_lu[df.index.month]
-    df['season'] = grp_ary 
+    df['season'] = grp_ary
 
     # Step 1: Compute desired percentiles
     if time_scale.lower() == 'year':
-        df_extremes = pd.DataFrame({'min. value': df.groupby('Year')[var].min(), 
+        df_extremes = pd.DataFrame({'min. value': df.groupby('Year')[var].min(),
                                                     'p10 value': df.groupby('Year')[var].quantile(0.1),
                                                     'p90 value': df.groupby('Year')[var].quantile(0.9),
                                                     'max. value': df.groupby('Year')[var].max()})
         ##  Broken y-axis figure
         fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(15,10))
-        
+
         # Trend lines
         slope_max, intercept_max, r_value_max, pv_max, se_max = stats.linregress(df_extremes.index, df_extremes['max. value'])
         ax1.plot(df_extremes.index, df_extremes['max. value'], '-o', color='r', markersize=10,  label='Annual max.')
         ax1.plot(df_extremes.index, intercept_max + slope_max*df_extremes.index, 'r', label='Trend: %.1f %s/decade' %(10*slope_max, units))
         #sns.regplot(x=df_extremes.index, y="max. value", data=df_extremes, ax=ax1, marker=None, color='red',robust=True, scatter_kws={'s': 80, 'edgecolor': 'black'})
-        
+
         slope_p90, intercept_p90, r_value_p90, pv_p90, se_p90 = stats.linregress(df_extremes.index, df_extremes['p90 value'])
         ax1.plot(df_extremes.index, df_extremes['p90 value'], '-o', color='salmon', markersize=10, label='Annual p90')
         ax1.plot(df_extremes.index, intercept_p90 + slope_p90*df_extremes.index, 'salmon', label='Trend: %.1f %s/decade' %(10*slope_p90, units))
         #sns.regplot(x=df_extremes.index, y="p90 value", data=df_extremes, ax=ax1, marker=None, color='salmon',robust=True, scatter_kws={'s': 80, 'edgecolor': 'black'})
-        
+
         slope_p10, intercept_p10, r_value_p10, pv_p10, se_p10 = stats.linregress(df_extremes.index, df_extremes['p10 value'])
         ax2.plot(df_extremes.index, df_extremes['p10 value'], '-o', color='deepskyblue', markersize=10, label='Annual p10')
         ax2.plot(df_extremes.index, intercept_p10 + slope_p10*df_extremes.index, 'deepskyblue', label='Trend: %.1f %s/decade' %(10*slope_p10, units))
         #sns.regplot(x=df_extremes.index, y="p10 value", data=df_extremes, ax=ax2, marker=None, color='deepskyblue',robust=True, scatter_kws={'s': 80, 'edgecolor': 'black'})
-        
+
         slope_min, intercept_min, r_value_min, pv_min, se_min = stats.linregress(df_extremes.index, df_extremes['min. value'])
         ax2.plot(df_extremes.index, df_extremes['min. value'], '-o', color='blue', markersize=10, label='Annual min.')
         ax2.plot(df_extremes.index, intercept_min + slope_min*df_extremes.index, 'blue', label='Trend: %.1f %s/decade' %(10*slope_min, units))
         #sns.regplot(x=df_extremes.index, y="min. value", data=df_extremes, ax=ax2, marker=None, color='blue',robust=True, scatter_kws={'s': 80, 'edgecolor': 'black'})
-        
+
         # zoom-in / limit the view to different portions of the data
         ax1.set_ylim(df_extremes['p90 value'].min()*0.95, df_extremes.max().max()*1.05)  # outliers only
         ax2.set_ylim(min(df_extremes.min().min()*0.95, df_extremes.min().min()*1.05), df_extremes['p10 value'].max()*1.05)  # outliers only
-        
+
         # hide the spines between ax and ax2
         ax1.spines.bottom.set_visible(False)
         ax2.spines.top.set_visible(False)
@@ -1890,7 +1890,7 @@ def timeseries_extremevalues(df, var, units, climate_normal_period, database, st
                         linestyle="none", color='k', mec='k', mew=1, clip_on=False)
         ax1.plot([0, 1], [0, 0], transform=ax1.transAxes, **kwargs)
         ax2.plot([0, 1], [1, 1], transform=ax2.transAxes, **kwargs)
-            
+
         ## legend
         #ax1.legend(bbox_to_anchor=(0.4, -0.22),ncol=2,fontsize=14).set_visible(True)
         #ax2.legend().set_visible(False)
@@ -1912,7 +1912,7 @@ def timeseries_extremevalues(df, var, units, climate_normal_period, database, st
 
     elif time_scale.lower() == 'month':
         month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        df_extremes = pd.DataFrame({'min. value': df.groupby(['Month','Year'])[var].min(), 
+        df_extremes = pd.DataFrame({'min. value': df.groupby(['Month','Year'])[var].min(),
                                                 'p10 value': df.groupby(['Month','Year'])[var].quantile(0.1),
                                                 'p90 value': df.groupby(['Month','Year'])[var].quantile(0.9),
                                                 'max. value': df.groupby(['Month','Year'])[var].max()})
@@ -1928,23 +1928,23 @@ def timeseries_extremevalues(df, var, units, climate_normal_period, database, st
             gss = matplotlib.gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec=gs[n],hspace=0.03)
             ax0 = fig.add_subplot(gss[0])
             ax1 = fig.add_subplot(gss[1], sharex=ax0)
-            
+
             # Trend lines
             slope_max, intercept_max, r_value_max, pv_max, se_max = stats.linregress(df_plot.index, df_plot['max. value'])
             ax0.plot(df_plot.index, df_plot['max. value'], '-o', color='r', markersize=9,  label='Annual max.')
             ax0.plot(df_plot.index, intercept_max + slope_max*df_plot.index, 'r', label='%.1f %s/10y' %(10*slope_max, units))
             #sns.regplot(x=df_extremes.index, y="max. value", data=df_extremes, ax=ax1, marker=None, color='red',robust=True, scatter_kws={'s': 80, 'edgecolor': 'black'})
-            
+
             slope_p90, intercept_p90, r_value_p90, pv_p90, se_p90 = stats.linregress(df_plot.index, df_plot['p90 value'])
             ax0.plot(df_plot.index, df_plot['p90 value'], '-o', color='salmon', markersize=9, label='Annual p90')
             ax0.plot(df_plot.index, intercept_p90 + slope_p90*df_plot.index, 'salmon', label='%.1f %s/10y' %(10*slope_p90, units))
             #sns.regplot(x=df_extremes.index, y="p90 value", data=df_extremes, ax=ax1, marker=None, color='salmon',robust=True, scatter_kws={'s': 80, 'edgecolor': 'black'})
-            
+
             slope_p10, intercept_p10, r_value_p10, pv_p10, se_p10 = stats.linregress(df_plot.index, df_plot['p10 value'])
             ax1.plot(df_plot.index, df_plot['p10 value'], '-o', color='deepskyblue', markersize=9, label='Annual p10')
             ax1.plot(df_plot.index, intercept_p10 + slope_p10*df_plot.index, 'deepskyblue', label='%.1f %s/10y' %(10*slope_p10, units))
             #sns.regplot(x=df_extremes.index, y="p10 value", data=df_extremes, ax=ax2, marker=None, color='deepskyblue',robust=True, scatter_kws={'s': 80, 'edgecolor': 'black'})
-            
+
             slope_min, intercept_min, r_value_min, pv_min, se_min = stats.linregress(df_plot.index, df_plot['min. value'])
             ax1.plot(df_plot.index, df_plot['min. value'], '-o', color='blue', markersize=9, label='Annual min.')
             ax1.plot(df_plot.index, intercept_min + slope_min*df_plot.index, 'blue', label='%.1f %s/10y' %(10*slope_min, units))
@@ -1970,7 +1970,7 @@ def timeseries_extremevalues(df, var, units, climate_normal_period, database, st
                                 linestyle="none", color='k', mec='k', mew=1, clip_on=False)
                 ax0.plot([0, 1], [0, 0], transform=ax0.transAxes, **kwargs)
                 ax1.plot([0, 1], [1, 1], transform=ax1.transAxes, **kwargs)
-                    
+
             # legend
             if n == 10:
                 #ax0.legend(bbox_to_anchor=(0.3, -0.52),ncol=2,fontsize=13).set_visible(True)
@@ -2007,7 +2007,7 @@ def timeseries_extremevalues(df, var, units, climate_normal_period, database, st
 
 
     elif time_scale.lower() == 'season':
-        df_extremes = pd.DataFrame({'min. value': df.groupby(['season','Year'])[var].min(), 
+        df_extremes = pd.DataFrame({'min. value': df.groupby(['season','Year'])[var].min(),
                                                 'p10 value': df.groupby(['season','Year'])[var].quantile(0.1),
                                                 'p90 value': df.groupby(['season','Year'])[var].quantile(0.9),
                                                 'max. value': df.groupby(['season','Year'])[var].max()})
@@ -2027,23 +2027,23 @@ def timeseries_extremevalues(df, var, units, climate_normal_period, database, st
             gss = matplotlib.gridspec.GridSpecFromSubplotSpec(2, 1, subplot_spec=gs[n],hspace=0.03)
             ax0 = fig.add_subplot(gss[0])
             ax1 = fig.add_subplot(gss[1], sharex=ax0)
-            
+
             # Trend lines
             slope_max, intercept_max, r_value_max, pv_max, se_max = stats.linregress(df_plot.index, df_plot['max. value'])
             a,=ax0.plot(df_plot.index, df_plot['max. value'], '-o', color='r', markersize=9,  label='Annual max.')
             a_t,=ax0.plot(df_plot.index, intercept_max + slope_max*df_plot.index, 'r', label='%.1f %s/10y' %(10*slope_max, units))
             #sns.regplot(x=df_extremes.index, y="max. value", data=df_extremes, ax=ax1, marker=None, color='red',robust=True, scatter_kws={'s': 80, 'edgecolor': 'black'})
-            
+
             slope_p90, intercept_p90, r_value_p90, pv_p90, se_p90 = stats.linregress(df_plot.index, df_plot['p90 value'])
             b,=ax0.plot(df_plot.index, df_plot['p90 value'], '-o', color='salmon', markersize=9, label='Annual p90')
             b_t,=ax0.plot(df_plot.index, intercept_p90 + slope_p90*df_plot.index, 'salmon', label='%.1f %s/10y' %(10*slope_p90, units))
             #sns.regplot(x=df_extremes.index, y="p90 value", data=df_extremes, ax=ax1, marker=None, color='salmon',robust=True, scatter_kws={'s': 80, 'edgecolor': 'black'})
-            
+
             slope_p10, intercept_p10, r_value_p10, pv_p10, se_p10 = stats.linregress(df_plot.index, df_plot['p10 value'])
             c,=ax1.plot(df_plot.index, df_plot['p10 value'], '-o', color='deepskyblue', markersize=9, label='Annual p10')
             c_t,=ax1.plot(df_plot.index, intercept_p10 + slope_p10*df_plot.index, 'deepskyblue', label='%.1f %s/10y' %(10*slope_p10, units))
             #sns.regplot(x=df_extremes.index, y="p10 value", data=df_extremes, ax=ax2, marker=None, color='deepskyblue',robust=True, scatter_kws={'s': 80, 'edgecolor': 'black'})
-            
+
             slope_min, intercept_min, r_value_min, pv_min, se_min = stats.linregress(df_plot.index, df_plot['min. value'])
             d,=ax1.plot(df_plot.index, df_plot['min. value'], '-o', color='blue', markersize=9, label='Annual min.')
             d_t,=ax1.plot(df_plot.index, intercept_min + slope_min*df_plot.index, 'blue', label='%.1f %s/10y' %(10*slope_min, units))
@@ -2070,7 +2070,7 @@ def timeseries_extremevalues(df, var, units, climate_normal_period, database, st
                                 linestyle="none", color='k', mec='k', mew=1, clip_on=False)
                 ax0.plot([0, 1], [0, 0], transform=ax0.transAxes, **kwargs)
                 ax1.plot([0, 1], [1, 1], transform=ax1.transAxes, **kwargs)
-                    
+
             # Create another legend for the records.
             #second_legend = ax1.legend(handles=[a_t, b_t], bbox_to_anchor=(0.1, 1.05), ncol=2)
             ax1.legend(handles=[a_t, b_t, c_t, d_t], fontsize=13, ncol=2).set_visible(True)#, bbox_to_anchor=(0.99, 1.06), ncol=2, fontsize=13).set_visible(True)
@@ -2153,8 +2153,8 @@ def plot_yearly_cycles(df, variable, units, year_to_plot, climate_normal_period,
             highlighted_years = df[(df.index.year != year_to_plot) & (df.index.month == 12) & (df.index.day == 31)].sort_values(by=variable, ascending=True)[:3].index.year
         elif criterion == 'latest':
             highlighted_years = df[(df.index.year != year_to_plot) & (df.index.month == 12) & (df.index.day == 31)][-3:].index.year
-        
-    
+
+
 
     # Comparo con 3 años más calidos
     fig, ax = plt.subplots(figsize=(15,7))
@@ -2202,7 +2202,7 @@ def plot_yearly_cycles(df, variable, units, year_to_plot, climate_normal_period,
                         loc=1,bbox_to_anchor=(0.24, 0.185),
                         bbox_transform=ax.transAxes, prop={'size': 12}, frameon=True)
     text.patch.set_alpha(0.5)
-    
+
     ax.set_xticks([0,31,59,90,120,151,180,211,242,272,303,333])
     ax.set_xticklabels(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'])
 
@@ -2297,11 +2297,11 @@ def annual_meteogram(df, df_climate, year_to_plot, climate_normal_period, databa
     filename: str
         Absolute path where the plot is going to be saved
     plot_anoms: boolean
-        If true, temperature and wind values will be plotted as departures from the climatological selected statistic    
+        If true, temperature and wind values will be plotted as departures from the climatological selected statistic
     show_seasons: boolean
-        If true, the background is plotted with different colors for each climatological season    
+        If true, the background is plotted with different colors for each climatological season
     '''
-    
+
     if 'Temp' not in df.columns:
         raise ValueError('The temperature data should be included in df with column name "Temp"')
     if 'Rainfall' not in df.columns:
@@ -2310,17 +2310,17 @@ def annual_meteogram(df, df_climate, year_to_plot, climate_normal_period, databa
         raise ValueError('The wind speed data should be included in df with column name "WindSpeed"')
 
     yearmin = df.index.year.min()
-    yearmax = df.index.year.max() 
+    yearmax = df.index.year.max()
 
     df = df[df.index.year == year_to_plot]
     df_climate = df_climate[df_climate.index.year == year_to_plot]
 
     df['Accum. Rainfall'] = df['Rainfall'].cumsum()
     df_climate['Accum. Rainfall'] = df_climate['Rainfall_mean'].cumsum()
-    
+
     if df.index.month[-1] != 12 or df.index.month[-1] != 31:
         df = df.reindex(pd.date_range('%i-01-01' %year_to_plot, '%i-12-31' %year_to_plot, freq='1D'))
-    
+
     if df_climate.index.month[-1] != 12 or df_climate.index.month[-1] != 31:
         df_climate = df_climate.reindex(pd.date_range('%i-01-01' %year_to_plot, '%i-12-31' %year_to_plot, freq='1D'))
 
@@ -2345,7 +2345,7 @@ def annual_meteogram(df, df_climate, year_to_plot, climate_normal_period, databa
         if len(mask2[mask2 == True]) > 0:
             ax[0].bar(df_climate.loc[df_climate.index.year == year_to_plot, 'Temp'].index[mask2], bottom=df_climate.loc[df_climate.index.year == year_to_plot, 'Temp'][mask2], height = diff_var[mask2], color = '#eb4034', alpha=0.7)
 
-    
+
     accumrainmedian, = ax[1].plot(df_climate.loc[df_climate.index.year == year_to_plot, 'Accum. Rainfall'].index, df_climate.loc[df_climate.index.year == year_to_plot, 'Accum. Rainfall'],color='k',label='_nolegend_')
     ax[1].plot(df.loc[df.index.year == year_to_plot, 'Accum. Rainfall'].index, df.loc[df.index.year == year_to_plot,'Accum. Rainfall'],color='r',label='_nolegend_')
     ax1 = ax[1].twinx()
@@ -2441,7 +2441,7 @@ def when_season_starts(df, df_climate, variable, units, year_to_plot,  climate_n
         Metric to compute the climatological normal values (mean or median)
 
     '''
-    
+
     df = df.copy()
 
     minyear = df.index.year.min()
@@ -2584,7 +2584,7 @@ def when_season_starts(df, df_climate, variable, units, year_to_plot,  climate_n
     for i in range(len(start_dates_plot)-1):
         #ax[1].axvspan(mdates.date2num(pd.to_datetime(start_dates_plot[i])), mdates.date2num(pd.to_datetime(start_dates_plot[i+1])), color=season_colors[i], alpha=0.2, zorder=-10)
         ax[1].axvspan(start_dates_plot[i], start_dates_plot[i+1], color=season_colors[i], alpha=0.2, zorder=-10)
-   
+
     # Add reference lanes to climate normal
     #ax[1].axvline(mdates.date2num(dt.datetime(int(year_to_plot),3,1)), linestyle='--', color='k', alpha=0.3)
     #ax[1].axvline(mdates.date2num(dt.datetime(int(year_to_plot),6,1)), linestyle='--', color='k', alpha=0.3)
@@ -2720,7 +2720,7 @@ def when_season_starts_evolution(df, df_climate, variable, year_to_plot,  climat
                     start_dates[i] = orig_dates[i] #np.nan
                 else:
                     start_dates[i] = cond.idxmax() + 1
-            
+
 
         # Variables for arrow and text
         shifts = {}
@@ -2764,7 +2764,7 @@ def when_season_starts_evolution(df, df_climate, variable, year_to_plot,  climat
             nans = row[row == 1]
             list_of_nans = [d for _, d in nans.groupby(nans.index - np.arange(len(nans)))]
             for j in range(len(list_of_nans)):
-                ax.add_patch(matplotlib.patches.Rectangle(((list_of_nans[j].index[0]-0.5), (i-0.5)),list_of_nans[j].index[-1] - list_of_nans[j].index[0], 1, 
+                ax.add_patch(matplotlib.patches.Rectangle(((list_of_nans[j].index[0]-0.5), (i-0.5)),list_of_nans[j].index[-1] - list_of_nans[j].index[0], 1,
                 hatch='//', fill=False, snap=False, linewidth=0))
         ax.axvline(59, linestyle='--', color='k', alpha=0.8)
         ax.axvline(151, linestyle='--', color='k', alpha=0.8)
@@ -2798,10 +2798,10 @@ def when_season_starts_evolution(df, df_climate, variable, year_to_plot,  climat
         #                       ha="center", va="center", color="w")
 
         ## Matshow legend
-        # get the colors of the values, according to the 
+        # get the colors of the values, according to the
         # colormap used by imshow
         colors = [ r.cmap(r.norm(value)) for value in [1,2,3,4]]
-        # create a patch (proxy artist) for every color 
+        # create a patch (proxy artist) for every color
         patches = [ matplotlib.patches.Patch(color=colors[i], label=season_names[i]) for i in range(len([1,2,3,4])) ]
         # put those patched as legend-handles into the legend
         ax.legend(handles=patches, bbox_to_anchor=(.77, -.05),ncols=4, fontsize=16) #, loc=2, borderaxespad=0. )
@@ -2839,7 +2839,7 @@ def when_season_starts_evolution(df, df_climate, variable, year_to_plot,  climat
         plt.text(0.03, 0.96, 'Climate normal period: %i-%i' %(climate_normal_period[0],climate_normal_period[1]), fontsize=14, transform=plt.gcf().transFigure)
         plt.text(0.03, 0.93, 'Period with data: %i-%i' %(yearmin,yearmax), fontsize=14, transform=plt.gcf().transFigure)
         plt.text(0.8, 0.96, 'Database: %s' %database, fontsize=14, transform=plt.gcf().transFigure)
-        plt.text(0.8, 0.93, 'Location: %s' %station_name, fontsize=14, transform=plt.gcf().transFigure)    
+        plt.text(0.8, 0.93, 'Location: %s' %station_name, fontsize=14, transform=plt.gcf().transFigure)
         fig.savefig(filename,dpi=300)
 
     if plot_type == 'both':
@@ -2855,7 +2855,7 @@ def when_season_starts_evolution(df, df_climate, variable, year_to_plot,  climat
             nans = row[row == 1]
             list_of_nans = [d for _, d in nans.groupby(nans.index - np.arange(len(nans)))]
             for j in range(len(list_of_nans)):
-                ax.add_patch(matplotlib.patches.Rectangle(((list_of_nans[j].index[0]-0.5), (i-0.5)),list_of_nans[j].index[-1] - list_of_nans[j].index[0], 1, 
+                ax.add_patch(matplotlib.patches.Rectangle(((list_of_nans[j].index[0]-0.5), (i-0.5)),list_of_nans[j].index[-1] - list_of_nans[j].index[0], 1,
                 hatch='//', fill=False, snap=False, linewidth=0))
         ax.axvline(59, linestyle='--', color='k', alpha=0.8)
         ax.axvline(151, linestyle='--', color='k', alpha=0.8)
@@ -2885,10 +2885,10 @@ def when_season_starts_evolution(df, df_climate, variable, year_to_plot,  climat
         # as soon as a second legend is made, the first disappears and needs to be added back again
         ax.add_artist(legend_2) #python now knows that "figure" must take the "legend_1" along with "legend_2"
 
-        # get the colors of the values, according to the 
+        # get the colors of the values, according to the
         # colormap used by imshow
         colors = [ r.cmap(r.norm(value)) for value in [1,2,3,4]]
-        # create a patch (proxy artist) for every color 
+        # create a patch (proxy artist) for every color
         patches = [ matplotlib.patches.Patch(color=colors[i], label=season_names[i]) for i in range(len([1,2,3,4])) ]
         # put those patched as legend-handles into the legend
         ax.legend(handles=patches, loc='upper right', bbox_to_anchor=(.58, 0.995),ncols=4, fontsize=15, framealpha=0.6) #, loc=2, borderaxespad=0. )
@@ -2927,8 +2927,8 @@ def when_season_starts_evolution(df, df_climate, variable, year_to_plot,  climat
         ax2.grid(color='grey', linestyle='-') #, linewidth=1.2, axis='y',zorder=12)
         ax2.margins(x=0)
         ax2.yaxis.set_major_locator(plt.MaxNLocator(4, min_n_ticks=3))
-    
-        plt.subplots_adjust(bottom=0.05,left=0.08) #, right=0.98, hspace=0.15, wspace=0.1)    
+
+        plt.subplots_adjust(bottom=0.05,left=0.08) #, right=0.98, hspace=0.15, wspace=0.1)
         fig.savefig(filename,dpi=300)
 
         if extract_data == True:
@@ -2963,7 +2963,7 @@ def plot_accumulated_anomalies(df, var, units, year_to_plot, climate_normal_peri
     gfreq: int
         The frequency of each group to be analysed
     '''
-    
+
     df = df.copy()
     df_climate = df[(df.index.year >= climate_normal_period[0]) & (df.index.year <= climate_normal_period[1])][var]
 
@@ -2976,11 +2976,11 @@ def plot_accumulated_anomalies(df, var, units, year_to_plot, climate_normal_peri
     #df_anoms = df_anoms.groupby([df_anoms.index.month,df_anoms.index.day]).mean(numeric_only=True)
     #df_anoms = df_anoms[~((df_anoms.index.get_level_values(1) == 29) & (df_anoms.index.get_level_values(0)  == 2))][var]
 
-    df_climate_anoms = df_climate[~((df_climate.index.day == 29) & (df_climate.index.month == 2))] 
+    df_climate_anoms = df_climate[~((df_climate.index.day == 29) & (df_climate.index.month == 2))]
     df_climate_anoms = df_climate_anoms.groupby([df_climate_anoms.index.month,df_climate_anoms.index.day]).mean(numeric_only=True)
     df_climate_anoms = df_climate_anoms[~((df_climate_anoms.index.get_level_values(1) == 29) & (df_climate_anoms.index.get_level_values(0)  == 2))].reset_index()
     df_climate_anoms.columns = ['Month','Day',var+'_climate']
-    
+
     df_anoms = df[[var, 'Month', 'Day']].merge(df_climate_anoms, on=['Month', 'Day'])
     df_anoms[var+'_anom'] = df_anoms[var] - df_anoms[var+'_climate']
     df_anoms.index = df.index
@@ -2988,7 +2988,7 @@ def plot_accumulated_anomalies(df, var, units, year_to_plot, climate_normal_peri
 
     # 2. Grouping
     df_anoms = df_anoms.groupby(pd.Grouper(freq=freq)).mean(numeric_only=True)
-    
+
     # 2.1 After grouping, group by year and compute cumulative anomalies
     df_dict = {}
     final_anom = {} # Save final anomalies for plotting reasons
@@ -3083,7 +3083,7 @@ def plot_anomalies(df, var, units, climate_normal_period, database, station_name
     gfreq: int
         The frequency of each group to be analysed
     '''
-    
+
     df = df.copy()
     df_climate = df[(df.index.year >= climate_normal_period[0]) & (df.index.year <= climate_normal_period[1])][var]
 
@@ -3096,11 +3096,11 @@ def plot_anomalies(df, var, units, climate_normal_period, database, station_name
     #df_anoms = df_anoms.groupby([df_anoms.index.month,df_anoms.index.day]).mean(numeric_only=True)
     #df_anoms = df_anoms[~((df_anoms.index.get_level_values(1) == 29) & (df_anoms.index.get_level_values(0)  == 2))][var]
 
-    df_climate_anoms = df_climate[~((df_climate.index.day == 29) & (df_climate.index.month == 2))] 
+    df_climate_anoms = df_climate[~((df_climate.index.day == 29) & (df_climate.index.month == 2))]
     df_climate_anoms = df_climate_anoms.groupby([df_climate_anoms.index.month,df_climate_anoms.index.day]).mean(numeric_only=True)
     df_climate_anoms = df_climate_anoms[~((df_climate_anoms.index.get_level_values(1) == 29) & (df_climate_anoms.index.get_level_values(0)  == 2))].reset_index()
     df_climate_anoms.columns = ['Month','Day',var+'_climate']
-    
+
     df_anoms = df[[var, 'Month', 'Day']].merge(df_climate_anoms, on=['Month', 'Day'])
     df_anoms[var+'_anom'] = df_anoms[var] - df_anoms[var+'_climate']
     df_anoms.index = df.index
@@ -3108,7 +3108,7 @@ def plot_anomalies(df, var, units, climate_normal_period, database, station_name
 
     # 2. Grouping
     df_anoms = df_anoms.groupby(pd.Grouper(freq=freq)).mean(numeric_only=True)
-    
+
     # 3. Plotting
     fig, ax = plt.subplots(figsize=(15,7))
 
@@ -3122,7 +3122,7 @@ def plot_anomalies(df, var, units, climate_normal_period, database, station_name
     ax.grid(color='black',alpha=0.5)
     ax.set_ylabel('%s anomaly [%s]' %(var, units),fontsize=15)
 #    ax.set_xlim([0,max(df_year.index)])
-    
+
     ax.plot(df_anoms[var+'_anom'].rolling(window=window).mean(),color='black',label='%i-period MA' %window)
 
     locator = mdates.AutoDateLocator(maxticks=20) #minticks=3, maxticks=12)
@@ -3178,7 +3178,7 @@ def compare_with_globaldataset(df, var, units, database, station_name, filename,
         raise ValueError('Your data has not data within the period 1961-1990. Therefore, there cannot be perform a comparison with the global dataset. Exiting...')
 
     normal_values = normal_values.groupby(normal_values.index).mean(numeric_only=True)[var].mean(numeric_only=True)
-    
+
 
     df_plot = df.groupby(df.index.year).mean(numeric_only=True) - float(normal_values)
     label = station_name
