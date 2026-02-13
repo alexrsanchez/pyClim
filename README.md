@@ -2,7 +2,7 @@
 
 ## A Python module to plot climatological data
 
-![Getting Started](pyClim_logo.png)
+![Getting Started](./docs/pyClim_logo.png)
 
 pyClim is a Python package that makes analysing climatological data easy, and pretty!
 
