@@ -25,10 +25,10 @@ license-files = ["LICEN[CS]E*"]
 maintainers = [
   {name = "Alejandro RodrÃ­guez SÃ¡nchez", email = "ars.rodriguezs@gmail.com"}
 ]
-name = "pyclim_test"
+name = "pyClim"
 readme = "README.md"
 requires-python = ">=3.10"
-version = "0.0.8"
+version = "0.1.0"
 
 [project.urls]
 Homepage = "https://https://github.com/alexrsanchez/pyclim"

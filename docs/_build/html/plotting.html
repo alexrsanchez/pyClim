@@ -54,6 +54,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#plotting-data-versus-the-climatological-normal-values">Plotting data versus the climatological normal values</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#classify-data-by-categories">Classify data by categories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#identifying-trends-in-a-dataset">Identifying trends in a dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#period-averages">Period averages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#meteograms">Meteograms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#annual-cycles">Annual cycles</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">pyClim</a></li>
@@ -440,9 +443,9 @@ The optional argument ‘alldatamean’, which is set to True by default, allows
     <span class="n">df1_complete</span><span class="p">,</span>
     <span class="n">var</span><span class="p">,</span>
     <span class="n">units</span><span class="p">,</span>
-    <span class="n">plotdir</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="si">%s</span><span class="s2">_withmean.png&quot;</span> <span class="o">%</span> <span class="n">var</span><span class="p">,</span>
     <span class="n">database</span><span class="p">,</span>
     <span class="n">station_name</span><span class="p">,</span>
+    <span class="n">plotdir</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="si">%s</span><span class="s2">_withmean.png&quot;</span> <span class="o">%</span> <span class="n">var</span><span class="p">,</span>
     <span class="n">averaging_period</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="n">grouping</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">,</span>
     <span class="n">grouping_stat</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
@@ -454,9 +457,9 @@ The optional argument ‘alldatamean’, which is set to True by default, allows
     <span class="n">df1_complete</span><span class="p">,</span>
     <span class="n">var</span><span class="p">,</span>
     <span class="n">units</span><span class="p">,</span>
-    <span class="n">plotdir</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="si">%s</span><span class="s2">_sum_withmean.png&quot;</span> <span class="o">%</span> <span class="n">var</span><span class="p">,</span>
     <span class="n">database</span><span class="p">,</span>
     <span class="n">station_name</span><span class="p">,</span>
+    <span class="n">plotdir</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="si">%s</span><span class="s2">_sum_withmean.png&quot;</span> <span class="o">%</span> <span class="n">var</span><span class="p">,</span>
     <span class="n">averaging_period</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="n">grouping</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">,</span>
     <span class="n">grouping_stat</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span>
@@ -464,7 +467,96 @@ The optional argument ‘alldatamean’, which is set to True by default, allows
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Another function that allows to identify trends is the <code class="xref py py-func docutils literal notranslate"><span class="pre">timeseries_extremevalues()</span></code> function.</p>
+<p>Another function that allows to identify trends is the <code class="xref py py-func docutils literal notranslate"><span class="pre">timeseries_extremevalues()</span></code> function, which allows the user to plot the evolution of extreme values of a given variable. As usual, the user can control the time discretization of the extreme values. Below, an example for annual and seasonal values is given.</p>
+<img alt="_images/Annualextremevalues_Tmax_lines.png" src="_images/Annualextremevalues_Tmax_lines.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">### Seasonal plots</span>
+<span class="n">var</span> <span class="o">=</span> <span class="s1">&#39;Tmax&#39;</span>
+<span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;ºC&#39;</span>
+<span class="c1"># Extreme values</span>
+<span class="n">timeseries_extremevalues</span><span class="p">(</span>
+    <span class="n">df1_complete</span><span class="p">,</span>
+    <span class="n">var</span><span class="p">,</span>
+    <span class="n">units</span><span class="p">,</span>
+    <span class="n">climate_normal_period</span><span class="p">,</span>
+    <span class="n">database</span><span class="p">,</span>
+    <span class="n">station_name</span><span class="p">,</span>
+    <span class="n">plotdir</span> <span class="o">+</span> <span class="s2">&quot;/Annualextremevalues_</span><span class="si">%s</span><span class="s2">_lines.png&quot;</span> <span class="o">%</span> <span class="n">var</span><span class="p">,</span>
+    <span class="n">time_scale</span><span class="o">=</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">timeseries_extremevalues</span><span class="p">(</span>
+    <span class="n">df1_complete</span><span class="p">,</span>
+    <span class="n">var</span><span class="p">,</span>
+    <span class="n">units</span><span class="p">,</span>
+    <span class="n">climate_normal_period</span><span class="p">,</span>
+    <span class="n">database</span><span class="p">,</span>
+    <span class="n">station_name</span><span class="p">,</span>
+    <span class="n">plotdir</span> <span class="o">+</span> <span class="s2">&quot;/seasonalextremevalues_</span><span class="si">%s</span><span class="s2">_lines.png&quot;</span> <span class="o">%</span> <span class="n">var</span><span class="p">,</span>
+    <span class="n">time_scale</span><span class="o">=</span><span class="s2">&quot;season&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="period-averages">
+<h2>Period averages<a class="headerlink" href="#period-averages" title="Link to this heading"></a></h2>
+<p>Use the <code class="xref py py-func docutils literal notranslate"><span class="pre">pyclim.plot_periodaverages()</span></code> function to plot the evolution of the mean or median value of a variable between two days. In the example below, the evolution of the daily mean temperature between June 1st (included) and September 1st (not included) is plotted:</p>
+<img alt="_images/examplesTmaxperiodaverages.png" src="_images/examplesTmaxperiodaverages.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">### Plot median value of a certain period for every year with data</span>
+<span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Tmean&#39;</span><span class="p">]:</span>
+    <span class="n">units</span> <span class="o">=</span> <span class="n">units_list</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
+    <span class="n">plot_periodaverages</span><span class="p">(</span>
+        <span class="n">df1_complete</span><span class="p">,</span>
+        <span class="n">climate_df_sep</span><span class="p">,</span>
+        <span class="n">var</span><span class="p">,</span>
+        <span class="n">units</span><span class="p">,</span>
+        <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">station_name</span><span class="p">,</span>
+        <span class="n">database</span><span class="p">,</span>
+        <span class="n">plotdir</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">periodaverages.png&#39;</span> <span class="o">%</span><span class="n">var</span><span class="p">,</span>
+        <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">,</span>
+        <span class="n">window</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="meteograms">
+<h2>Meteograms<a class="headerlink" href="#meteograms" title="Link to this heading"></a></h2>
+<p>pyClim also offers the possibility of displaying data in form of a meteogram. A meteogram is a graphical presentation of one or more meteorological variables with respect to time. pyClim offers to construct a meteogram using Temperature, Rainfall and Wind Speed data, as showed in the example below.
+In pyClim, the meteogram shows, for each variable, a comparison of the given year data with the climatological normal values (provided that a DataFrame with the climate normal values is given). If the “plot_anoms” parameter is set to True, the values of the given year are represented as departures from the climatological normal values, as in this example.</p>
+<img alt="_images/2025_meteogram_bars.png" src="_images/2025_meteogram_bars.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">annual_meteogram</span><span class="p">(</span>
+    <span class="n">df1_complete</span><span class="p">,</span>
+    <span class="n">climate_df_sep</span><span class="p">,</span>
+    <span class="n">year_to_plot</span><span class="p">,</span>
+    <span class="n">climate_normal_period</span><span class="p">,</span>
+    <span class="n">database</span><span class="p">,</span>
+    <span class="n">station_name</span><span class="p">,</span>
+    <span class="n">plotdir</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="si">%i</span><span class="s2">_meteogram_bars.png&quot;</span> <span class="o">%</span> <span class="n">year_to_plot</span><span class="p">,</span>
+    <span class="n">plot_anoms</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="annual-cycles">
+<h2>Annual cycles<a class="headerlink" href="#annual-cycles" title="Link to this heading"></a></h2>
+<p>One more functionality of pyClim allows to plot the annual cycle of a given variable. The “criterion” parameter controls which annual cycles to highlight -beyond the selected year-, which can be the top 3 with highest or lowest final values.</p>
+<img alt="_images/Tmax_yearlycycle_colorlowest.png" src="_images/Tmax_yearlycycle_colorlowest.png" />
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">colores_frios</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;#2205A8&quot;</span><span class="p">,</span> <span class="s2">&quot;#1542F5&quot;</span><span class="p">,</span> <span class="s2">&quot;#7397fb&quot;</span><span class="p">]</span>
+<span class="n">plot_annual_cycles</span><span class="p">(</span>
+    <span class="n">tmax_accum_anom</span><span class="p">,</span>
+    <span class="s2">&quot;Tmax&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ºC&quot;</span><span class="p">,</span>
+    <span class="n">year_to_plot</span><span class="p">,</span>
+    <span class="n">climate_normal_period</span><span class="p">,</span>
+    <span class="n">database</span><span class="p">,</span>
+    <span class="n">station_name</span><span class="p">,</span>
+    <span class="n">colores_frios</span><span class="p">,</span>
+    <span class="n">plotdir</span> <span class="o">+</span> <span class="s2">&quot;/Tmax_yearlycycle_colorlowest.png&quot;</span><span class="p">,</span>
+    <span class="n">yearly_cycle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;lowest&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 

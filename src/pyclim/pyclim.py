@@ -16,15 +16,17 @@ from pathlib import Path
 #### Contact: ars.rodriguezs@gmail.com #######################
 ##############################################################
 
+# ruff: noqa
+
 
 def quality_control(
-    df,
-    vars_to_check,
+    df: pd.DataFrame,
+    vars_to_check: list[str],
     t_units="C",
     wind_units="m/s",
-    t_upper=50,
-    t_lower=-50,
-    wind_upper=200,
+    t_upper=50.0,
+    t_lower=-50.0,
+    wind_upper=200.0,
 ):
     """
     This function allows to perform a quality control in a DataFrame and returns it without suspicious or bad data.
@@ -112,7 +114,9 @@ def quality_control(
     return df
 
 
-def compute_climate(df, variables, climate_period, separate_df=True):
+def compute_climate(
+    df: pd.DataFrame, variables: list[str], climate_period: list[int], separate_df=True
+):
     """
     This function allows to compute the climatology of a certain timeseries.
 
@@ -120,10 +124,10 @@ def compute_climate(df, variables, climate_period, separate_df=True):
     ----------
     df: DataFrame
         DataFrame containing the data
-    variables: list
-        List of the variables for which the climatology is going to be computed
-    climate_period: list
-        List of the first and last year of the desired reference climate period
+    variables: list[str]
+        List of strings containing the names of the variables for which the climatology is going to be computed
+    climate_period: list[int]
+        List containing the the first and last year of the desired reference climate period
     separate_df: boolean
         If true, creates a new DataFrame with the values of the climatology. If false, appends those values to the input DataFrame.
 
@@ -206,7 +210,9 @@ def fill_between_colormap(x, y1, y2, cmap, **kwargs):
     return cmap, normalize
 
 
-def compute_daily_records_oneyear(df, variable, year_to_compute):
+def compute_daily_records_oneyear(
+    df: pd.DataFrame, variable: str, year_to_compute: int
+):
     """
     This function allows to compute the exceedances of the extreme values.
 
@@ -214,7 +220,7 @@ def compute_daily_records_oneyear(df, variable, year_to_compute):
     ----------
     df: DataFrame
         DataFrame containing the data
-    variable: list
+    variable: str
         Variable for which the exceedances are going to be computed
     year_to_compute: int
         Year of the data for which the exceedances are going to be computed
@@ -333,7 +339,7 @@ def compute_daily_records_oneyear(df, variable, year_to_compute):
     return c
 
 
-def compute_daily_records(df, variable, years):
+def compute_records(df: pd.DataFrame, variable: str, years: list[int]):
     """
     This function allows to compute the exceedances of the extreme values.
 
@@ -342,9 +348,9 @@ def compute_daily_records(df, variable, years):
     df: DataFrame
         DataFrame containing the data
     variable: list
-        Variable for which the exceedances are going to be computed
+        String representing the name of the variable for which the exceedances are going to be computed
     years: list
-        Years of the data for which the exceedances are going to be computed
+        List containing the years of the data for which the exceedances are going to be computed
 
     Return
     ------
@@ -355,6 +361,9 @@ def compute_daily_records(df, variable, years):
     ###########################################################################
     #### COMPUTES DAILY, MONTHLY AND ABSOLUTE RECORDS UP TO "y" ####
     ###########################################################################
+
+    df = df.copy()
+
     c1 = pd.DataFrame()
     if "Day" not in df.columns:
         df["Day"] = df.index.day
@@ -466,8 +475,38 @@ def compute_daily_records(df, variable, years):
 
 
 def plot_records_count(
-    records_df, variable, database, station_name, filename, freq="day"
+    records_df: pd.DataFrame,
+    variable: str,
+    database: str,
+    station_name: str,
+    filename: str,
+    freq="day",
 ):
+    """
+    This function allows to plot the exceedances of previous record values.
+
+    Arguments
+    ----------
+    records_df: DataFrame
+        DataFrame containing the records' exceedances data
+    variable: str
+        String containing the name of the variable for which the exceedances are going to be computed
+    database: str
+        String representing the name of the database where the data comes from
+    station_name: str
+        String representing the name of the climatological station
+    filename: str
+        String containing the absolute path where the figure is going to be saved
+    freq: str
+        String representing the kind of records to be plotted:
+        "day" for daily records; "month" for monthly records; and "year" for absolute records
+
+    Return
+    ------
+    c: DataFrame
+        Returns a DataFrame the records occurred during "year_to_compute"
+    """
+
     if freq not in ["day", "month", "year"]:
         raise ValueError(
             "'freq' must be 'day', 'month' or 'year'. Your 'freq' is '%s'" % freq
@@ -553,12 +592,12 @@ def plot_records_count(
 
 
 def compute_and_plot_exceedances(
-    df,
-    variable,
-    database,
-    station_name,
-    filename,
-    threshold=0,
+    df: pd.DataFrame,
+    variable: str,
+    database: str,
+    station_name: str,
+    filename: str,
+    threshold=0.0,
     time_scale="year",
     upwards=True,
     plot_means=False,
@@ -573,17 +612,17 @@ def compute_and_plot_exceedances(
     df: DataFrame
         DataFrame containing the data
     variable: str
-        Variable to be analysed
+        String containing the name of the variable to be analysed
     database: str
-        Name of the database from which the plotted data comes
+        String representing the name of the database where the data comes from
     station_name: str
-        Name of the location of the data
+        String representing the name of the climatological station
     filename: str
-        Absolute path where the plot is going to be saved
+        String containing the absolute path where the figure is going to be saved
     threshold: int or float
         Threshold value
     time_scale: str
-        Time scale to which aggregate the number of exceedances
+        String representing the time scale to which aggregate the number of exceedances
     upwards: str
         If True, computes exceedances above the threshold value. If False, computes exceedances below the threshold value
     plot_means: boolean
@@ -1086,16 +1125,16 @@ def compute_and_plot_exceedances(
 
 
 def plot_variable_trends(
-    df,
-    var,
-    units,
-    filename,
-    database,
-    station_name,
+    df: pd.DataFrame,
+    var: str,
+    units: str,
+    database: str,
+    station_name: str,
+    filename: str,
     averaging_period=5,
     grouping="year",
     grouping_stat="mean",
-    rain_limit=1,
+    rain_limit=1.0,
     plot_kind="line",
     alldatamean=True,
 ):
@@ -1107,15 +1146,15 @@ def plot_variable_trends(
     df: DataFrame
         DataFrame containing the data
     var: str
-        Name of the variable to be plotted
+        String containing the name of the variable to be analysed
     units: str
-        Units of the variable to be plotted
-    filename: str
-        Absolute path where the plot is going to be saved
+        String containing the units of the variable to be analysed
     database: str
-        Name of the database from which the plotted data comes
+        String representing the name of the database where the data comes from
     station_name: str
-        Name of the location of the data
+        String representing the name of the climatological station
+    filename: str
+        String containing the absolute path where the figure is going to be saved
     averaging_period: int
         The window for the averaging process
     grouping: str
@@ -1540,17 +1579,17 @@ def plot_variable_trends(
 
 
 def plot_data_vs_climate(
-    df,
-    df_climate,
-    variable,
-    units,
-    inidate,
-    enddate,
+    df: pd.DataFrame,
+    df_climate: pd.DataFrame,
+    variable: str,
+    units: str,
+    inidate: dt.datetime,
+    enddate: dt.datetime,
     colormap,
-    database,
-    climate_normal_period,
-    station_name,
-    filename,
+    database: str,
+    climate_normal_period: list[int],
+    station_name: str,
+    filename: str,
     kind="line",
     climate_stat="median",
     fillcolor_gradient=False,
@@ -1568,9 +1607,9 @@ def plot_data_vs_climate(
     df_climate: DataFrame
         DataFrame containing the climatological data
     variable: str
-        Variable to be plotted
+        String containing the name of the variable to be analysed
     units: str
-        Units of the variable to be plotted
+        String containing the units of the variable to be analysed
     inidate: datetime.datetime
         First date to be plotted
     enddate: datetime.datetime
@@ -1578,17 +1617,17 @@ def plot_data_vs_climate(
     colormap: matplotlib colormap
         Colormap to be used in plotting
     database: str
-        Name of the database from which the plotted data comes
+        String representing the name of the database where the data comes from
     climate_normal_period: list
-        First and last year of the reference period to be used as climatological normal
+        List containing the first and last year of the reference period to be used as climatological normal
     station_name: str
-        Name of the location of the data
+        String representing the name of the climatological station
     filename: str
-        Absolute path where the plot is going to be saved
+        String containing the absolute path where the figure is going to be saved
     kind: str
-        Kind of plot (line or bar)
+        String indicating the kind of plot (line or bar)
     climate_stat: str
-        Metric to compute the climatological normal values (mean or median)
+        String indicating the metric to compute the climatological normal values (mean or median)
     fillcolor_gradient: boolean
         Parameter that controls the way the colormap is employed. If true, the colormap is continue
     use_std : boolean
@@ -1746,7 +1785,7 @@ def plot_data_vs_climate(
         )
         mask1 = diff_var < 0
         mask2 = diff_var >= 0
-        if len(mask1[mask1 is True]) > 0:
+        if len(mask1[mask1 == True]) > 0:
             ax.bar(
                 df.loc[inidate:enddate, "%s" % (variable)].index[mask1],
                 bottom=df_climate.loc[
@@ -1756,7 +1795,7 @@ def plot_data_vs_climate(
                 color=colormap([-1000]),
                 alpha=0.7,
             )
-        if len(mask2[mask2 is True]) > 0:
+        if len(mask2[mask2 == True]) > 0:
             ax.bar(
                 df.loc[inidate:enddate, "%s" % (variable)].index[mask2],
                 bottom=df_climate.loc[
@@ -1958,18 +1997,18 @@ def plot_data_vs_climate(
 
 
 def plot_data_vs_climate_withrecords(
-    df,
-    df_climate,
-    records_df,
-    variable,
-    units,
-    inidate,
-    enddate,
+    df: pd.DataFrame,
+    df_climate: pd.DataFrame,
+    records_df: pd.DataFrame,
+    variable: str,
+    units: str,
+    inidate: dt.datetime,
+    enddate: dt.datetime,
     colormap,
-    database,
-    climate_normal_period,
-    station_name,
-    filename,
+    database: str,
+    climate_normal_period: list[int],
+    station_name: str,
+    filename: str,
     kind="line",
     climate_stat="median",
     fillcolor_gradient=False,
@@ -1989,9 +2028,9 @@ def plot_data_vs_climate_withrecords(
     records_df: DataFrame
         DataFrame containing the records values
     variable: str
-        Variable to be plotted
+        String containing the name of the variable to be analysed
     units: str
-        Units of the variable to be plotted
+        String containing the units of the variable to be analysed
     inidate: datetime.datetime
         First date to be plotted
     enddate: datetime.datetime
@@ -1999,17 +2038,17 @@ def plot_data_vs_climate_withrecords(
     colormap: matplotlib colormap
         Colormap to be used in plotting
     database: str
-        Name of the database from which the plotted data comes
+        String representing the name of the database where the data comes from
     climate_normal_period: list
-        First and last year of the reference period to be used as climatological normal
+        List containing the first and last year of the reference period to be used as climatological normal
     station_name: str
-        Name of the location of the data
+        String representing the name of the climatological station
     filename: str
-        Absolute path where the plot is going to be saved
+        String containing the absolute path where the figure is going to be saved
     kind: str
-        Kind of plot (line or bar)
+        String indicating the kind of plot (line or bar)
     climate_stat: str
-        Metric to compute the climatological normal values (mean or median)
+        String indicating the metric to compute the climatological normal values (mean or median)
     fillcolor_gradient: boolean
         Parameter that controls the way the colormap is employed. If true, the colormap is continue
     use_std : boolean
@@ -2040,8 +2079,6 @@ def plot_data_vs_climate_withrecords(
             color="#000000",
             label="Climate %s" % climate_stat,
         )
-        # ax.fill_between(df_climate.loc[inidate:enddate, '%s_%s' %(variable, climate_stat)].index,df_climate.loc[inidate:enddate,'%s_p090' %variable],df_climate.loc[inidate:enddate,'%s_p010' %variable],color='grey',alpha=0.4,label="10%-90%")
-        # ax.fill_between(df_climate.loc[inidate:enddate, '%s_%s' %(variable, climate_stat)].index,df_climate.loc[inidate:enddate,'%s_p095' %variable],df_climate.loc[inidate:enddate,'%s_p005' %variable],color='grey',alpha=0.25,label="5%-95%")
         if fillcolor_gradient is False:
             ax.fill_between(
                 df_climate.loc[
@@ -2152,7 +2189,7 @@ def plot_data_vs_climate_withrecords(
         # print(diff_var)
         mask1 = diff_var < 0
         mask2 = diff_var >= 0
-        if len(mask1[mask1 is True]) > 0:
+        if len(mask1[mask1 == True]) > 0:
             ax.bar(
                 df.loc[inidate:enddate, variable].index[mask1],
                 bottom=df_climate.loc[
@@ -2162,7 +2199,7 @@ def plot_data_vs_climate_withrecords(
                 color=colormap([-1000]),
                 alpha=0.7,
             )
-        if len(mask2[mask2 is True]) > 0:
+        if len(mask2[mask2 == True]) > 0:
             ax.bar(
                 df.loc[inidate:enddate, variable].index[mask2],
                 bottom=df_climate.loc[
@@ -2453,18 +2490,18 @@ def plot_data_vs_climate_withrecords(
 
 
 def plot_data_vs_climate_withrecords_multivar(
-    df,
-    df_climate,
-    records_df,
-    vars_list,
-    units_list,
-    inidate,
-    enddate,
+    df: pd.DataFrame,
+    df_climate: pd.DataFrame,
+    records_df: pd.DataFrame,
+    vars_list: list[str],
+    units_list: list[str],
+    inidate: dt.datetime,
+    enddate: dt.datetime,
     colormap,
-    database,
-    climate_normal_period,
-    station_name,
-    filename,
+    database: str,
+    climate_normal_period: list[int],
+    station_name: str,
+    filename: str,
     kind="line",
     climate_stat="median",
     fillcolor_gradient=False,
@@ -2484,9 +2521,9 @@ def plot_data_vs_climate_withrecords_multivar(
     records_df: DataFrame
         DataFrame containing the records values
     vars_list: str
-        Variable(s) to be plotted
+        List of strings with the name(s) of the variable(s) to be plotted
     units: str
-        Units of the variable(s) to be plotted
+        List of strings with the units of the variable(s) to be plotted
     inidate: datetime.datetime
         First date to be plotted
     enddate: datetime.datetime
@@ -2494,17 +2531,17 @@ def plot_data_vs_climate_withrecords_multivar(
     colormap: matplotlib colormap
         Colormap to be used in plotting
     database: str
-        Name of the database from which the plotted data comes
+        String representing the name of the database from which the plotted data comes
     climate_normal_period: list
-        First and last year of the reference period to be used as climatological normal
+        List containing the first and last year of the reference period to be used as climatological normal
     station_name: str
-        Name of the location of the data
+        String representing the name of the location of the data
     filename: str
-        Absolute path where the plot is going to be saved
+        String containing the absolute path where the plot is going to be saved
     kind: str
-        Kind of plot (line or bar)
+        String indicating the kind of plot (line or bar)
     climate_stat: str
-        Metric to compute the climatological normal values (mean or median)
+        String indicating the metric to compute the climatological normal values (mean or median)
     fillcolor_gradient: boolean
         Parameter that controls the way the colormap is employed. If true, the colormap is continue
     use_std : boolean
@@ -2823,7 +2860,7 @@ def plot_data_vs_climate_withrecords_multivar(
             mask1 = diff_var1 > 0
             mask2 = diff_var1 < 0
             mask3 = diff_var1 == 0
-            if len(mask1[mask1 is True]) > 0:
+            if len(mask1[mask1 == True]) > 0:
                 ax[1].bar(
                     df.loc[inidate:enddate, vars_list[1]].index[mask1],
                     df.loc[inidate:enddate, vars_list[1]][mask1],
@@ -2831,7 +2868,7 @@ def plot_data_vs_climate_withrecords_multivar(
                     edgecolor="black",
                     linewidth=1,
                 )
-            if len(mask2[mask2 is True]) > 0:
+            if len(mask2[mask2 == True]) > 0:
                 ax[1].bar(
                     df.loc[inidate:enddate, vars_list[1]].index[mask2],
                     df.loc[inidate:enddate, vars_list[1]][mask2],
@@ -2839,7 +2876,7 @@ def plot_data_vs_climate_withrecords_multivar(
                     edgecolor="black",
                     linewidth=1,
                 )
-            if len(mask3[mask3 is True]) > 0:
+            if len(mask3[mask3 == True]) > 0:
                 ax[1].bar(
                     df.loc[inidate:enddate, vars_list[1]].index[mask3],
                     df.loc[inidate:enddate, vars_list[1]][mask3],
@@ -2946,7 +2983,7 @@ def plot_data_vs_climate_withrecords_multivar(
         mask1 = diff_var < 0
         mask2 = diff_var >= 0
 
-        if len(mask1[mask1 is True]) > 0:
+        if len(mask1[mask1 == True]) > 0:
             ax[0].bar(
                 df_climate.loc[
                     inidate:enddate, "%s_%s" % (vars_list[0], climate_stat)
@@ -2958,7 +2995,7 @@ def plot_data_vs_climate_withrecords_multivar(
                 color=colormap([-1000]),
                 alpha=0.7,
             )
-        if len(mask2[mask2 is True]) > 0:
+        if len(mask2[mask2 == True]) > 0:
             ax[0].bar(
                 df_climate.loc[
                     inidate:enddate, "%s_%s" % (vars_list[0], climate_stat)
@@ -3135,7 +3172,7 @@ def plot_data_vs_climate_withrecords_multivar(
             # print(diff_var)
             mask1 = diff_var < 0
             mask2 = diff_var >= 0
-            if len(mask1[mask1 is True]) > 0:
+            if len(mask1[mask1 == True]) > 0:
                 ax[1].bar(
                     df_climate.loc[
                         inidate:enddate, "%s_%s" % (vars_list[1], climate_stat)
@@ -3147,7 +3184,7 @@ def plot_data_vs_climate_withrecords_multivar(
                     color=colormap([-1000]),
                     alpha=0.7,
                 )
-            if len(mask2[mask2 is True]) > 0:
+            if len(mask2[mask2 == True]) > 0:
                 ax[1].bar(
                     df_climate.loc[
                         inidate:enddate, "%s_%s" % (vars_list[1], climate_stat)
@@ -3171,7 +3208,7 @@ def plot_data_vs_climate_withrecords_multivar(
             mask2 = diff_var1 < 0
             mask3 = diff_var1 == 0
 
-            if len(mask1[mask1 is True]) > 0:
+            if len(mask1[mask1 == True]) > 0:
                 ax[1].bar(
                     df.loc[inidate:enddate, vars_list[1]].index[mask1],
                     df.loc[inidate:enddate, vars_list[1]][mask1],
@@ -3179,7 +3216,7 @@ def plot_data_vs_climate_withrecords_multivar(
                     edgecolor="black",
                     linewidth=0.8,
                 )
-            if len(mask2[mask2 is True]) > 0:
+            if len(mask2[mask2 == True]) > 0:
                 ax[1].bar(
                     df.loc[inidate:enddate, vars_list[1]].index[mask2],
                     df.loc[inidate:enddate, vars_list[1]][mask2],
@@ -3187,7 +3224,7 @@ def plot_data_vs_climate_withrecords_multivar(
                     edgecolor="black",
                     linewidth=0.8,
                 )
-            if len(mask3[mask3 is True]) > 0:
+            if len(mask3[mask3 == True]) > 0:
                 ax[1].bar(
                     df.loc[inidate:enddate, vars_list[1]].index[mask3],
                     df.loc[inidate:enddate, vars_list[1]][mask3],
@@ -3415,15 +3452,15 @@ def plot_data_vs_climate_withrecords_multivar(
 
 
 def plot_periodaverages(
-    df,
-    df_climate,
-    var,
-    units,
-    inidate,
-    enddate,
-    station_name,
-    database,
-    plotdir,
+    df: pd.DataFrame,
+    df_climate: pd.DataFrame,
+    var: str,
+    units: str,
+    inidate: dt.datetime,
+    enddate: dt.datetime,
+    station_name: str,
+    database: str,
+    filename: str,
     kind="line",
     stat="median",
     window=10,
@@ -3439,19 +3476,19 @@ def plot_periodaverages(
     df_climate : DataFrame
         DataFrame with annual averages of all data of the days to be analysed
     var : str
-        Variable to plot
+        String containing the name of the variable to be plotted
     units : str
-        Units of the variable to plot
+        String containing the units of the variable to be plotted
     inidate: datetime.datetime
         First date to be selected (only day and month are used, unless month of enddate is lower than month of inidate)
     enddate: datetime.datetime
         Last date to be selected (only day and month are used, unless month of enddate is lower than month of inidate)
     station_name : str
-        Location of the data
+        String representing the name of the location of the data
     database : str
-        Source of the data
-    plotdir : str
-        Plotting directory
+        String containing the name of the source of the data
+    filename : str
+        String containing the absolute path where the figure is going to be saved
     stat : str
         Statistic to apply to the data
     window : int
@@ -3577,7 +3614,7 @@ def plot_periodaverages(
         mask1 = df[var] >= 0
         mask2 = df[var] < 0
 
-        if len(mask1[mask1 is True]) > 0:
+        if len(mask1[mask1 == True]) > 0:
             ax.bar(
                 df.index[mask1],
                 df[var][mask1],
@@ -3585,7 +3622,7 @@ def plot_periodaverages(
                 edgecolor="black",
                 linewidth=0.8,
             )
-        if len(mask2[mask2 is True]) > 0:
+        if len(mask2[mask2 == True]) > 0:
             ax.bar(
                 df.index[mask2],
                 df[var][mask2],
@@ -3658,23 +3695,23 @@ def plot_periodaverages(
     )
 
     ax.set_xlim([df.index.min() - 0.5, df.index.max() + 0.5])
-    fig.savefig(plotdir + "/%saverageofperiod.png" % (var), dpi=300)
+    fig.savefig(filename, dpi=300)
 
 
 # def plot_movingaverages(df,df_climate):
 
 
 def plot_data_and_accum_anoms(
-    df,
-    df_climate,
-    year_to_plot,
-    vars_list,
-    units_list,
+    df: pd.DataFrame,
+    df_climate: pd.DataFrame,
+    year_to_plot: int,
+    vars_list: list[str],
+    units_list: list[str],
     colormap,
-    database,
-    climate_normal_period,
-    station_name,
-    plotdir,
+    database: str,
+    climate_normal_period: list[int],
+    station_name: str,
+    filename: str,
     climate_stat="median",
     secondplot_type="accum",
     w=7,
@@ -3690,11 +3727,11 @@ def plot_data_and_accum_anoms(
     df_climate: DataFrame
         DataFrame containing the climatological data
     year_to_plot: int
-        Year of the data to be plotted
+        Integer representing the year of the data to be plotted
     vars_list: str
-        Variable(s) to be plotted
+        List of strings containing the name(s) of the variable(s) to be plotted
     units_list: str
-        Units of the variable(s) to be plotted
+        List of strings containing the units of the variable(s) to be plotted
     inidate: datetime.datetime
         First date to be plotted
     enddate: datetime.datetime
@@ -3702,17 +3739,17 @@ def plot_data_and_accum_anoms(
     colormap: matplotlib colormap
         Colormap to be used in plotting
     database: str
-        Name of the database from which the plotted data comes
+        String containing the name of the database from which the plotted data comes
     climate_normal_period: list
-        First and last year of the reference period to be used as climatological normal
+        List of integers representing the first and last year of the reference period to be used as climatological normal
     station_name: str
-        Name of the location of the data
-    plotdir: str
-        Absolute path where the plot is going to be saved
+        String containing the name of the location of the data
+    filename: str
+        String containing the absolute path where the plot is going to be saved
     climate_stat: str
-        Metric to compute the climatological normal values (mean or median)
+        String representing the metric to compute the climatological normal values (mean or median)
     secondplot_type: str
-        Type of the second plot (accum or moving)
+        String indicating the type of the second plot (accum or moving)
     show_seasons: boolean
         If true, the background is plotted with different colors for each climatological season
     """
@@ -3947,37 +3984,26 @@ def plot_data_and_accum_anoms(
             wrap=True,
         )
         plt.subplots_adjust(hspace=0.1)
-        fig.savefig(
-            plotdir
-            + "/%s_and_%sanom_climate%s%i%i.png"
-            % (
-                vars_list[i],
-                secondplot_type,
-                climate_stat,
-                climate_normal_period[0],
-                climate_normal_period[1],
-            ),
-            dpi=300,
-        )
+        fig.savefig(filename, dpi=300)
 
 
-def plot_data_and_yearly_cycle(
-    df,
-    df_climate,
-    year_to_plot,
-    vars_list,
-    units_list,
+def plot_data_and_annual_cycle(
+    df: pd.DataFrame,
+    df_climate: pd.DataFrame,
+    year_to_plot: int,
+    vars_list: list[str],
+    units_list: list[str],
     colormap,
-    database,
-    climate_normal_period,
-    station_name,
-    plotdir,
+    database: str,
+    climate_normal_period: list[int],
+    station_name: str,
+    filename: str,
     climate_stat="median",
     fillcolor_gradient=False,
     show_seasons=True,
 ):
     """
-    This function allows to plot climatological data of one variable against the climatological mean or median, and their yearly cycle.
+    This function allows to plot climatological data of one variable against the climatological mean or median, and their annual cycle.
 
     Arguments
     ----------
@@ -3986,11 +4012,11 @@ def plot_data_and_yearly_cycle(
     df_climate: DataFrame
         DataFrame containing the climatological data
     year_to_plot: int
-        Year of the data to be plotted
+        Integer representing the year of the data to be plotted
     vars_list: str
-        Variable(s) to be plotted
+        List of strings containing the name(s) of the variable(s) to be plotted
     units_list: str
-        Units of the variable(s) to be plotted
+        List of strings with the units of the variable(s) to be plotted
     inidate: datetime.datetime
         First date to be plotted
     enddate: datetime.datetime
@@ -3998,19 +4024,19 @@ def plot_data_and_yearly_cycle(
     colormap: matplotlib colormap
         Colormap to be used in plotting
     database: str
-        Name of the database from which the plotted data comes
+        String containing the name of the database from which the plotted data comes
     climate_normal_period: list
-        First and last year of the reference period to be used as climatological normal
+        List of integers representing the first and last year of the reference period to be used as climatological normal
     station_name: str
-        Name of the location of the data
-    plotdir: str
-        Absolute path where the plot is going to be saved
+        String containing the name of the location of the data
+    filename: str
+        String containing the absolute path where the plot is going to be saved
     climate_stat: str
-        Metric to compute the climatological normal values (mean or median)
+        String indicating the metric to compute the climatological normal values (mean or median)
     fillcolor_gradient: boolean
-        Parameter that controls the way the colormap is employed. If true, the colormap is continue
+        Parameter that controls the way the colormap is employed. If True, the colormap is continue
     show_seasons: boolean
-        If true, the background is plotted with different colors for each climatological season
+        If True, the background is plotted with different colors for each climatological season
     """
 
     df = df.copy()
@@ -4440,27 +4466,20 @@ def plot_data_and_yearly_cycle(
         )
         plt.subplots_adjust(hspace=0.1)
         fig.savefig(
-            plotdir
-            + "/%s_and_yearlycycleaccum_climate%s%i%i.png"
-            % (
-                vars_list[i],
-                climate_stat,
-                climate_normal_period[0],
-                climate_normal_period[1],
-            ),
+            filename,
             dpi=300,
         )
 
 
 def plot_timeseries(
-    df,
-    df_climate,
-    var,
-    units,
-    climate_normal_period,
-    database,
-    station_name,
-    filename,
+    df: pd.DataFrame,
+    df_climate: pd.DataFrame,
+    var: str,
+    units: str,
+    climate_normal_period: list[int],
+    database: str,
+    station_name: str,
+    filename: str,
     plot_MA=False,
     climate_stat="median",
     window=10,
@@ -4473,17 +4492,23 @@ def plot_timeseries(
     df: DataFrame
         DataFrame containing the data
     var: str
-        Variable to be plotted
+        String containing the name of the variable to be plotted
     units: str
-        Units of the variable to be plotted
+        String with the units of the variable to be plotted
+    climate_normal_period: list
+        List of integers representing the first and last year of the reference period to be used as climatological normal
     filename: str
-        Absolute path where the plot is going to be saved
+        String containig the absolute path where the plot is going to be saved
+    database: str
+        String containing the name of the database from which the plotted data comes
+    station_name: str
+        String containing the name of the location of the data
     colors: list
         List of colors to plot (one for each variable in vars_list)
     plot_MA: boolean
         If True, plots the moving average of that variable with period=window
     climate_stat: str
-        Metric to compute the climatological normal values (mean or median)
+        String representing the metric to compute the climatological normal values (mean or median)
     window: int
         Length of the moving average period
     """
@@ -4604,13 +4629,13 @@ def plot_timeseries(
 
 
 def timeseries_extremevalues(
-    df,
-    var,
-    units,
-    climate_normal_period,
-    database,
-    station_name,
-    filename,
+    df: pd.DataFrame,
+    var: str,
+    units: str,
+    climate_normal_period: list[int],
+    database: str,
+    station_name: str,
+    filename: str,
     time_scale="Year",
 ):
     """
@@ -4621,19 +4646,19 @@ def timeseries_extremevalues(
     df: DataFrame
         DataFrame containing the data
     var: str
-        Variable to be plotted
+        String containing the name of the variable to be plotted
     units: str
-        Units of the variable to be plotted
+        String containing the units of the variable to be plotted
     climate_normal_period: list
-        First and last year of the reference period to be used as climatological normal
+        List of integers representing the first and last year of the reference period to be used as climatological normal
     database: str
-        Name of the database from which the plotted data comes
+        String containing the name of the database from which the plotted data comes
     station_name: str
-        Name of the location of the data
+        String containing the name of the location of the data
     filename: str
-        Absolute path where the plot is going to be saved
+        String containing the absolute path where the plot is going to be saved
     time_scale: str
-        The time scale for which extract the extreme values. It can be: 'Year', 'Month' or 'season'.
+        String representing the time scale for which extract the extreme values. It can be: 'Year', 'Month' or 'season'.
     """
 
     df = df.copy()
@@ -5276,48 +5301,68 @@ def timeseries_extremevalues(
         fig.savefig(filename, dpi=300)
 
 
-def plot_yearly_cycles(
-    df,
-    variable,
-    units,
-    year_to_plot,
-    climate_normal_period,
-    database,
-    station_name,
+def plot_annual_cycles(
+    df: pd.DataFrame,
+    variable: str,
+    units: str,
+    year_to_plot: int,
+    climate_normal_period: list[int],
+    database: str,
+    station_name: str,
     colors,
-    filename,
+    filename: str,
     yearly_cycle=False,
     criterion="latest",
-):  # , units, climate_normal_period, database, station_name, plotdir, criterion='latest'):
+):
     """
-    This function allows to plot the yearly cycles of one variable for every year included in data
+    This function allows to plot the annual cycles of one variable for every year included in data
 
     Arguments
     ----------
     df: DataFrame
         DataFrame containing the data
     variable: str
-        Variable to be plotted
+        String containing the name of the variable to be plotted
     units: str
-        Units of the variable to be plotted
+        String containing the units of the variable to be plotted
     climate_normal_period: list
-        First and last year of the reference period to be used as climatological normal
+        List of integers representing the first and last year of the reference period to be used as climatological normal
     database: str
-        Name of the database from which the plotted data comes
+        String representing the name of the database from which the plotted data comes
     station_name: str
-        Name of the location of the data
+        String containing the name of the location of the data
     colors: list
         List of colors to be used in plotting
     filename: str
-        Absolute path where the plot is going to be saved
+        String containing the absolute path where the plot is going to be saved
     yearly_cycle: boolean
         If false, it plots the yearly data as it happened, insted of the yearly cycle
+    criterion: str
+        String representing the criterion for highlighting ("highest", "lowest" or "latest")
     """
     yearmin = df[variable].first_valid_index().year  # df.index.year.min()
     yearmax = df[variable].last_valid_index().year
 
     if criterion not in ["highest", "lowest", "latest"]:
         raise ValueError('"criterion" must be "highest" or "lowest" or "latest"')
+
+    df_climate = df[
+        (df.index.year >= climate_normal_period[0])
+        & (df.index.year <= climate_normal_period[1])
+    ]
+
+    if "%s_median" % variable not in df.columns:
+        median = (
+            df_climate.groupby([df_climate.index.month, df_climate.index.day])
+            .median(numeric_only=True)[variable]
+            .reset_index()
+        )
+        median.columns = ["Month", "Day", "%s_median" % variable]
+        df1 = df[["Month", "Day"]]
+        df1_joined = pd.merge(df1, median, on=["Month", "Day"])
+        df1_joined.index = df.index
+
+        df["%s_median" % variable] = df1_joined["%s_median" % variable]
 
     # Remove years with not enough data
     for y in df.index.year.unique():
@@ -5654,14 +5699,14 @@ def plot_yearly_cycles(
         wrap=True,
     )
     plt.subplots_adjust(left=0.07, right=0.98, hspace=0.1, wspace=0.1, bottom=0.07)
-    fig.suptitle("Yearly cycle of %s" % (variable), y=0.97, fontsize=24)
+    fig.suptitle("Annual cycle of %s" % (variable), y=0.97, fontsize=24)
     fig.autofmt_xdate()
     fig.savefig(filename, dpi=300)
 
 
-def get_yearly_cycle(df, df_climate, vars_list):
+def get_annual_cycle(df: pd.DataFrame, df_climate: pd.DataFrame, vars_list: list[str]):
     """
-    This function allows to extract the yearly cycles of selected variables
+    This function allows to extract the annual cycles of selected variables
 
     Arguments
     ----------
@@ -5670,7 +5715,7 @@ def get_yearly_cycle(df, df_climate, vars_list):
     df_climate: DataFrame
         DataFrame containing the climatological data
     vars_list: str
-        Variable(s) to be extracted
+        List of strings containing the name(s) of the variable(s) to be extracted
     """
 
     accum_mean_df = pd.DataFrame()
@@ -5723,13 +5768,13 @@ def get_yearly_cycle(df, df_climate, vars_list):
 
 
 def annual_meteogram(
-    df,
-    df_climate,
-    year_to_plot,
-    climate_normal_period,
-    database,
-    station_name,
-    filename,
+    df: pd.DataFrame,
+    df_climate: pd.DataFrame,
+    year_to_plot: int,
+    climate_normal_period: list[int],
+    database: str,
+    station_name: str,
+    filename: str,
     plot_anoms=False,
     show_seasons=True,
 ):
@@ -5743,15 +5788,15 @@ def annual_meteogram(
     df_climate: DataFrame
         DataFrame containing the climatological normal data
     year_to_plot: int
-        Year to be plotted
+        Integer indicating the year to be plotted
     climate_normal_period: list
-        First and last year of the reference period to be used as climatological normal
+        List containing the first and last year of the reference period to be used as climatological normal
     database: str
-        Name of the database from which the plotted data comes
+        String representing the name of the database from which the plotted data comes
     station_name: str
-        Name of the location of the data
+        String representing the name of the location of the data
     filename: str
-        Absolute path where the plot is going to be saved
+        String containing the absolute path where the plot is going to be saved
     plot_anoms: boolean
         If true, temperature and wind values will be plotted as departures from the climatological selected statistic
     show_seasons: boolean
@@ -5828,7 +5873,7 @@ def annual_meteogram(
         mask1 = diff_var < 0
         mask2 = diff_var >= 0
 
-        if len(mask1[mask1 is True]) > 0:
+        if len(mask1[mask1 == True]) > 0:
             ax[0].bar(
                 df_climate.loc[df_climate.index.year == year_to_plot, "Temp"].index[
                     mask1
@@ -5840,7 +5885,7 @@ def annual_meteogram(
                 color="#34b1eb",
                 alpha=0.7,
             )
-        if len(mask2[mask2 is True]) > 0:
+        if len(mask2[mask2 == True]) > 0:
             ax[0].bar(
                 df_climate.loc[df_climate.index.year == year_to_plot, "Temp"].index[
                     mask2
@@ -5902,7 +5947,7 @@ def annual_meteogram(
         mask1 = diff_var < 0
         mask2 = diff_var >= 0
 
-        if len(mask1[mask1 is True]) > 0:
+        if len(mask1[mask1 == True]) > 0:
             ax[2].bar(
                 df_climate.loc[
                     df_climate.index.year == year_to_plot, "WindSpeed"
@@ -5914,7 +5959,7 @@ def annual_meteogram(
                 color="#34b1eb",
                 alpha=0.7,
             )
-        if len(mask2[mask2 is True]) > 0:
+        if len(mask2[mask2 == True]) > 0:
             ax[2].bar(
                 df_climate.loc[
                     df_climate.index.year == year_to_plot, "WindSpeed"
@@ -6036,15 +6081,14 @@ def annual_meteogram(
 
 
 def plot_accumulated_anomalies(
-    df,
-    var,
-    units,
-    year_to_plot,
-    climate_normal_period,
-    database,
-    station_name,
-    filename,
-    window=12,
+    df: pd.DataFrame,
+    var: str,
+    units: str,
+    year_to_plot: int,
+    climate_normal_period: list[int],
+    database: str,
+    station_name: str,
+    filename: str,
     freq="1D",
 ):
     """
@@ -6055,25 +6099,21 @@ def plot_accumulated_anomalies(
     df: DataFrame
         DataFrame containing the data
     var: str
-        Name of the variable to be plotted
+        String containing the name of the variable to be plotted
     units: str
-        Units of the variable to be plotted
+        String containing the units of the variable to be plotted
     year_to_plot: int
-        Year to be highlighted
+        Integer representing the year to be highlighted
     climate_normal_period: list
-        First and last year of the reference period to be used as climatological normal
-    station_name: str
-        Name of the location of the data
+        List of integers containing the first and last year of the reference period to be used as climatological normal
     database: str
-        Name of the database from which the plotted data comes
+        String containing the name of the database from which the plotted data comes
     station_name: str
-        Name of the location of the data
+        String representing the name of the location of the data
     filename: str
         Absolute path where the plot is going to be saved
-    window: int
-        Length of the window for plotting moving average of the anomalies
-    gfreq: int
-        The frequency of each group to be analysed
+    freq: int
+        String indicating the aggregation frequency
     """
 
     df = df.copy()
@@ -6255,13 +6295,13 @@ def plot_accumulated_anomalies(
 
 
 def plot_anomalies(
-    df,
-    var,
-    units,
-    climate_normal_period,
-    database,
-    station_name,
-    filename,
+    df: pd.DataFrame,
+    var: str,
+    units: str,
+    climate_normal_period: list[int],
+    database: str,
+    station_name: str,
+    filename: str,
     window=12,
     freq="1D",
 ):
@@ -6273,23 +6313,21 @@ def plot_anomalies(
     df: DataFrame
         DataFrame containing the data
     var: str
-        Name of the variable to be plotted
+        String containing the name of the variable to be plotted
     units: str
-        Units of the variable to be plotted
+        String containing the units of the variable to be plotted
     climate_normal_period: list
-        First and last year of the reference period to be used as climatological normal
-    station_name: str
-        Name of the location of the data
+        List of integers representing the first and last year of the reference period to be used as climatological normal
     database: str
-        Name of the database from which the plotted data comes
+        String containing the name of the database from which the plotted data comes
     station_name: str
-        Name of the location of the data
+        String representing the name of the location of the data
     filename: str
-        Absolute path where the plot is going to be saved
+        String containing the absolute path where the plot is going to be saved
     window: int
-        Length of the window for plotting moving average of the anomalies
-    gfreq: int
-        The frequency of each group to be analysed
+        Integer representing the length of the window for plotting moving average of the anomalies
+    freq: int
+        Integer representing the aggregation frequency
     """
 
     df = df.copy()
@@ -6338,7 +6376,7 @@ def plot_anomalies(
     mask1 = df_anoms[var + "_anom"] > 0
     mask2 = df_anoms[var + "_anom"] <= 0
 
-    if len(mask1[mask1 is True]) > 0:
+    if len(mask1[mask1 == True]) > 0:
         ax.bar(
             df_anoms.index[mask1],
             df_anoms[var + "_anom"][mask1],
@@ -6347,7 +6385,7 @@ def plot_anomalies(
             edgecolor="None",
             linewidth=0.85,
         )
-    if len(mask2[mask2 is True]) > 0:
+    if len(mask2[mask2 == True]) > 0:
         ax.bar(
             df_anoms.index[mask2],
             df_anoms[var + "_anom"][mask2],
@@ -6416,12 +6454,12 @@ def plot_anomalies(
 
 
 def compare_with_globaldataset(
-    df,
-    var,
-    units,
-    database,
-    station_name,
-    filename,
+    df: pd.DataFrame,
+    var: str,
+    units: str,
+    database: str,
+    station_name: str,
+    filename: str,
     window=None,
     global_dataset="HadCRUT",
 ):
@@ -6433,19 +6471,19 @@ def compare_with_globaldataset(
     df: DataFrame
         DataFrame containing the data
     var: str
-        Name of the variable to be plotted
+        String containing the name of the variable to be plotted
     units: str
-        Units of the variable to be plotted
+        String containing the units of the variable to be plotted
     database: str
-        Name of the database from which the plotted data comes
+        String containing the name of the database from which the plotted data comes
     station_name: str
-        Name of the location of the data
+        String containing the name of the location of the data
     filename: str
-        Absolute path where the plot is going to be saved
+        String containing the absolute path where the plot is going to be saved
     window: int
-        Length of the window for moving average computation. If None, no moving average is computed and the original data anomalies are plotted.
+        Integer representing the length of the window for moving average computation. If None, no moving average is computed and the original data anomalies are plotted.
     global_dataset: str
-        The name of the dataset to compare with. At the moment, only "HadCRUT" is accepted.
+        String containing the name of the dataset to compare with. At the moment, only "HadCRUT" is accepted.
     """
 
     df = df.copy()
@@ -6539,17 +6577,16 @@ def compare_with_globaldataset(
 
 
 def categories_evolution(
-    df,
-    var,
-    units,
-    categories_breaks,
-    categories_labels,
-    categories_colors,
-    database,
-    station_name,
-    filename,
+    df: pd.DataFrame,
+    var: str,
+    units: str,
+    categories_breaks: list,
+    categories_labels: list,
+    categories_colors: list,
+    database: str,
+    station_name: str,
+    filename: str,
     time_scale="year",
-    grouping_stat="mean",
 ):
     """
     This function allows to plot the evolution of a certain variable by grouping it into categories
@@ -6559,9 +6596,9 @@ def categories_evolution(
     df: DataFrame
         DataFrame containing the data
     var: str
-        Name of the variable to be plotted
+        String containing the name of the variable to be plotted
     units: str
-        Units of the variable to be plotted
+        String containing the units of the variable to be plotted
     categories_breaks: list
         List containing the breaks of each category
     categories_labels: list
@@ -6569,17 +6606,15 @@ def categories_evolution(
     categories_colors: list
         List containing the colours of each category
     station_name: str
-        Name of the location of the data
+        String containing the name of the location of the data
     database: str
-        Name of the database from which the plotted data comes
+        String containing the name of the database from which the plotted data comes
     station_name: str
-        Name of the location of the data
+        String representing the name of the location of the data
     filename: str
-        Absolute path where the plot is going to be saved
+        String containing the absolute path where the plot is going to be saved
     time_scale: str
-        Time scale to which aggregate the number of exceedances
-    grouping_stat: str
-        The statistic for data grouping
+        String indicating the time scale to which aggregate the data
 
     """
 

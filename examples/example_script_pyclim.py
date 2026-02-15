@@ -11,12 +11,13 @@ import datetime as dt
 
 import os
 
+# ruff: noqa
 
 # Import pyclim
 from pyclim import (
     quality_control,
     compute_climate,
-    compute_daily_records,
+    compute_records,
     compute_and_plot_exceedances,
     plot_anomalies,
     plot_accumulated_anomalies,
@@ -24,16 +25,16 @@ from pyclim import (
     plot_data_vs_climate_withrecords,
     plot_data_vs_climate_withrecords_multivar,
     plot_data_and_accum_anoms,
-    plot_data_and_yearly_cycle,
+    plot_data_and_annual_cycle,
     plot_periodaverages,
     plot_records_count,
     plot_timeseries,
     plot_variable_trends,
-    plot_yearly_cycles,
+    plot_annual_cycles,
     annual_meteogram,
     categories_evolution,
     timeseries_extremevalues,
-    get_yearly_cycle,
+    get_annual_cycle,
 )
 
 matplotlib.use("Agg")
@@ -175,13 +176,14 @@ iniyear = int(df1.Year.values[0])
 
 df1["DayofYear"] = df1.index.dayofyear
 
+df1["Accum.Rainfall"] = df1.groupby(df1.index.year)["Rainfall"].cumsum()
+
 climate_vars = [
     "Tmax",
     "Tmean",
     "Tmin",
     "Rainfall",
-    "Accumpcp",
-    "Accumpcphidro",
+    "Accum.Rainfall",
     "WindSpeed",
     "WindMaxSpeed",
 ]
@@ -315,7 +317,7 @@ for var in list(set(df1_complete.columns) & set(variables)):
         dt.datetime(2025, 9, 1),
         station_name,
         database,
-        plotdir,
+        plotdir + "/%speriodaverages.png" % var,
         stat="median",
         window=10,
     )
@@ -331,9 +333,10 @@ units_varis = []
 for i in range(len(varis)):
     units_varis.append(units_list[varis[i]])
 
-    multiyearrecords_df = compute_daily_records(
+    multiyearrecords_df = compute_records(
         df1_complete, varis[i], df1_complete.index.year.unique()
     )  # Compute records for variable
+
     multiyearrecords_df_allvars = pd.concat(
         [multiyearrecords_df_allvars, multiyearrecords_df], axis=1
     )
@@ -348,6 +351,7 @@ plot_records_count(
     plotdir + "/annual_records_Tmean.png",
     freq="day",
 )  # Plot number of days exceeding daily records
+
 plot_records_count(
     multiyearrecords_df_allvars,
     "Tmean",
@@ -468,7 +472,7 @@ plot_data_and_accum_anoms(
     w=7,
 )
 # Plot variable and accumulated mean or value
-plot_data_and_yearly_cycle(
+plot_data_and_annual_cycle(
     df1_complete,
     climate_df_sep,
     year_to_plot,
@@ -540,15 +544,15 @@ plot_timeseries(
 
 ### Yearly cycles
 
-tmax_accum_anom = get_yearly_cycle(
+tmax_accum_anom = get_annual_cycle(
     df1_complete, climate_df, varis
 )  # Get yearly cycle of accumulated anomalies
 
 colores_calidos = ["#800008", "#B80101", "#ff949b"]
 colores_frios = ["#2205A8", "#1542F5", "#7397fb"]
 # colores_calidos = ['#ff949b',"#B80101",'#800008']
-plot_yearly_cycles(
-    tmax_accum_anom,
+plot_annual_cycles(
+    df1_complete,
     "Tmax",
     "ºC",
     year_to_plot,
@@ -560,7 +564,7 @@ plot_yearly_cycles(
     yearly_cycle=True,
     criterion="lowest",
 )
-plot_yearly_cycles(
+plot_annual_cycles(
     tmax_accum_anom,
     "Tmax",
     "ºC",
@@ -607,9 +611,9 @@ for var in sorted(
         df1_complete,
         var,
         units,
-        plotdir + "/%s_withmean.png" % var,
         database,
         station_name,
+        plotdir + "/%s_withmean.png" % var,
         averaging_period=5,
         grouping="year",
         grouping_stat="mean",
@@ -620,9 +624,9 @@ for var in sorted(
         df1_complete,
         var,
         units,
-        plotdir + "/%s_sum_withmean.png" % var,
         database,
         station_name,
+        plotdir + "/%s_sum_withmean.png" % var,
         averaging_period=5,
         grouping="year",
         grouping_stat="sum",
@@ -633,9 +637,9 @@ for var in sorted(
         df1_complete,
         var,
         units,
-        plotdir + "/%s_withmean_season.png" % var,
         database,
         station_name,
+        plotdir + "/%s_withmean_season.png" % var,
         averaging_period=5,
         grouping="season",
         grouping_stat="mean",
@@ -645,9 +649,9 @@ for var in sorted(
         df1_complete,
         var,
         units,
-        plotdir + "/%s_withmean_month.png" % var,
         database,
         station_name,
+        plotdir + "/%s_withmean_month.png" % var,
         averaging_period=5,
         grouping="month",
         grouping_stat="mean",

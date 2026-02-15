@@ -11,7 +11,7 @@
 Welcome to pyClim's documentation!
 ==================================
 
-.. image:: pyClim_logo.png
+.. image:: pyClim_logo_025.png
 
 
 .. toctree::

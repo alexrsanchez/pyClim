@@ -104,7 +104,7 @@ Plotting a timeseries of anomalies
 ----------------------------------
 The 'freq' parameter allows to choose the temporal aggregation of the anomalies. For example, for daily anomalies use freq='1D':
 
-.. image:: ../examples/daily_anomalies_Tmean.png
+.. image:: ../examples/plots/daily_anomalies_Tmean.png
 
 .. code:: python
 
@@ -123,7 +123,7 @@ The 'freq' parameter allows to choose the temporal aggregation of the anomalies.
 
 And for monthly anomalies, freq='1ME':
 
-.. image:: ../examples/monthly_anomalies_Tmean.png
+.. image:: ../examples/plots/monthly_anomalies_Tmean.png
 
 .. code:: python
 
@@ -147,7 +147,7 @@ Use the :func:`pyclim.plot_accumulated_anomalies` function to plot the accumulat
 
 Accumulated anomalies from day to day:
 
-.. image:: ../examples/Tmean_accum_anoms_daily.png
+.. image:: ../examples/plots/Tmean_accum_anoms_daily.png
 
 .. code:: python
 
@@ -165,7 +165,7 @@ Accumulated anomalies from day to day:
 
 Weekly accumulated anomalies:
 
-.. image:: ../examples/Tmean_accum_anoms_weekly.png
+.. image:: ../examples/plots/Tmean_accum_anoms_weekly.png
 
 .. code:: python
 
@@ -183,7 +183,7 @@ Weekly accumulated anomalies:
 
 Monthly accumulated anomalies:
 
-.. image:: ../examples/Tmean_accum_anoms_monthly.png
+.. image:: ../examples/plots/Tmean_accum_anoms_monthly.png
 
 
 .. code:: python
@@ -207,7 +207,7 @@ Computing and plotting record values
 
 For computing the record values, use the :func:`pyclim.compute_daily_records` function. Then, one can plot the evolution of the number of high and low records with :func:`pyclim.plot_records_count`. The following example illustrates how to compute and plot the number of days in each year exceeding a daily record.
 
-.. image:: ../examples/annual_records_Tmean.png
+.. image:: ../examples/plots/annual_records_Tmean.png
 
 
 .. code:: python
@@ -292,7 +292,7 @@ Plotting data versus the climatological normal values
 
 One interesting functionality of the pyClim package is the ability to plot data versus its climatological normal values, including the occurrence of record values given that a DataFrame including records is provided.
 
-.. image:: ../examples/Tmeantimeseries_climatemedian19912020_withrecords.png
+.. image:: ../examples/plots/Tmeantimeseries_climatemedian19912020_withrecords.png
 
 .. code:: python
 
@@ -347,7 +347,7 @@ Classify data by categories
 Another visual way to represent the evolution of your data is to classify them by categories and then see the evolution of the occurrency of each category. This is done in pyClim with the :func:`pyclim.categories_evolution()` function.
 The user can see the evolution of each category, grouped by their monthly, seasonal and yearly occurrences. If no categories' labels are given, the script computes the labels from the given categories. An example is shown below:
 
-.. image:: ../examples/categories_Tmean_default.png
+.. image:: ../examples/plots/categories_Tmean_default.png
 
 .. code:: python
 
@@ -369,7 +369,7 @@ The user can see the evolution of each category, grouped by their monthly, seaso
 
 The 'time_scale' parameter allows to modify the temporal aggregation of the data:
 
-.. image:: ../examples/categories_Tmean_month_default.png
+.. image:: ../examples/plots/categories_Tmean_month_default.png
 
 .. code:: python
 
@@ -394,7 +394,7 @@ pyClim also allows you to rapidly identify trends in a dataset. Several function
 The :func:`pyclim.plot_variable_trends()` function, plots the time evolution of a certain variable. It also plots the mean value of each 'averaging_period' periods. The 'grouping' argument controls the temporal frequency of the variable aggregation, and the 'grouping_stat' controls the statistic to be plotted. It can be set to 'mean', if the user wants to know the temporal evolution of the average value of a variable, or to 'sum' (to see the evolution of the accumulated value of a variable, for example the total rainfall).
 The optional argument 'alldatamean', which is set to True by default, allows to plot the average value of all the analysed period.
 
-.. image:: ../examples/Rainfall_sum_withmean.png
+.. image:: ../examples/plots/Rainfall_sum_withmean.png
 
 
 .. code:: python
@@ -404,9 +404,9 @@ The optional argument 'alldatamean', which is set to True by default, allows to 
         df1_complete,
         var,
         units,
-        plotdir + "/%s_withmean.png" % var,
         database,
         station_name,
+        plotdir + "/%s_withmean.png" % var,
         averaging_period=5,
         grouping="year",
         grouping_stat="mean",
@@ -418,13 +418,93 @@ The optional argument 'alldatamean', which is set to True by default, allows to 
         df1_complete,
         var,
         units,
-        plotdir + "/%s_sum_withmean.png" % var,
         database,
         station_name,
+        plotdir + "/%s_sum_withmean.png" % var,
         averaging_period=5,
         grouping="year",
         grouping_stat="sum",
         rain_limit=1,
     )
 
-Another function that allows to identify trends is the :func:`timeseries_extremevalues()` function.
+Another function that allows to identify trends is the :func:`timeseries_extremevalues()` function, which allows the user to plot the evolution of extreme values of a given variable. As usual, the user can control the time discretization of the extreme values. Below, an example for annual and seasonal values is given.
+
+.. image:: ../examples/plots/Annualextremevalues_Tmax_lines.png
+
+
+.. code:: python
+
+    ### Seasonal plots
+    var = "Tmax"
+    units = "ºC"
+    # Extreme values
+    timeseries_extremevalues(
+        df1_complete,
+        var,
+        units,
+        climate_normal_period,
+        database,
+        station_name,
+        plotdir + "/Annualextremevalues_%s_lines.png" % var,
+        time_scale="Year",
+    )
+    timeseries_extremevalues(
+        df1_complete,
+        var,
+        units,
+        climate_normal_period,
+        database,
+        station_name,
+        plotdir + "/seasonalextremevalues_%s_lines.png" % var,
+        time_scale="season",
+    )
+
+
+Period averages
+---------------
+
+Use the :func:`pyclim.plot_periodaverages` function to plot the evolution of the mean or median value of a variable between two days. In the example below, the evolution of the daily mean temperature between June 1st (included) and September 1st (not included) is plotted:
+
+.. image:: ../examples/plots/examplesTmaxperiodaverages.png
+
+
+.. code:: python
+
+    ### Plot median value of a certain period for every year with data
+    for var in ["Tmean"]:
+        units = units_list[var]
+        plot_periodaverages(
+            df1_complete,
+            climate_df_sep,
+            var,
+            units,
+            dt.datetime(2025, 6, 1),
+            dt.datetime(2025, 9, 1),
+            station_name,
+            database,
+            plotdir + "%speriodaverages.png" % var,
+            stat="median",
+            window=10,
+        )
+
+
+Meteograms
+----------
+
+pyClim also offers the possibility of displaying data in form of a meteogram. A meteogram is a graphical presentation of one or more meteorological variables with respect to time. pyClim offers to construct a meteogram using Temperature, Rainfall and Wind Speed data, as showed in the example below.
+In pyClim, the meteogram shows, for each variable, a comparison of the given year data with the climatological normal values (provided that a DataFrame with the climate normal values is given). If the "plot_anoms" parameter is set to True, the values of the given year are represented as departures from the climatological normal values, as in this example.
+
+.. image:: ../examples/plots/2025_meteogram_bars.png
+
+.. code:: python
+
+    annual_meteogram(
+        df1_complete,
+        climate_df_sep,
+        year_to_plot,
+        climate_normal_period,
+        database,
+        station_name,
+        plotdir + "/%i_meteogram_bars.png" % year_to_plot,
+        plot_anoms=True,
+    )

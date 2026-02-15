@@ -1,9 +1,9 @@
 Metadata-Version: 2.4
 Name: pyclim_test
-Version: 0.0.8
+Version: 0.1.10
 Summary: A Python package that makes analysing climatological data easy, and pretty!
-Author-email: Alejandro Rodríguez Sánchez <ars.rodriguezs@gmail.com>
-Maintainer-email: Alejandro Rodríguez Sánchez <ars.rodriguezs@gmail.com>
+Author-email: Alejandro RodrÃ­guez SÃ¡nchez <ars.rodriguezs@gmail.com>
+Maintainer-email: Alejandro RodrÃ­guez SÃ¡nchez <ars.rodriguezs@gmail.com>
 License-Expression: MIT
 Project-URL: Homepage, https://https://github.com/alexrsanchez/pyclim
 Project-URL: Issues, https://https://github.com/alexrsanchez/pyclim/issues
@@ -18,28 +18,33 @@ Requires-Dist: seaborn
 Requires-Dist: numpy
 Requires-Dist: matplotlib
 Requires-Dist: scipy
+Requires-Dist: pre-commit
 Dynamic: license-file
 
 # pyClim
 
 ## A Python module to plot climatological data
 
+![Getting Started](./docs/pyClim_logo.png)
+
 pyClim is a Python package that makes analysing climatological data easy, and pretty!
 
 pyClim provides you with a set of Python functions so you can perform a complete analysis of your climatological data with publication-quality figures.
 
 ## Install
+
 To install the pyClim package:
+
 ```
 pip install pyclim
 ```
 
 ## Examples
+
 An example script and a set of example data are provided so you can run the example script and check every kind of figure pyClim can produce. Some of them are shown below:
 
-
-
 ## Contact
+
 Do you have any questions or suggestions? Have you found a bug? Open an issue or reach out:
 
 Alejandro Rodríguez Sánchez
