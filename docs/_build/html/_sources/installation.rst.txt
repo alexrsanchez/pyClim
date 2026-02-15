@@ -4,7 +4,7 @@ Installation
 pyClim, first install it using pip:
 
 .. code:: python
-    
+
     pip install pyclim
 
 For testing purposes, you can also install from TestPyPI:
