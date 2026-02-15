@@ -8,4 +8,7 @@ This package helps to:
 
 """
 
-from .pyclim import *
+# ruff: noqa
+
+
+from .pyClim import *

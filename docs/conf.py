@@ -9,7 +9,7 @@
 project = "pyClim"
 copyright = "2026, Alejandro Rodríguez Sánchez"
 author = "Alejandro Rodríguez Sánchez"
-release = "0.0.1"
+release = "0.1.1"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

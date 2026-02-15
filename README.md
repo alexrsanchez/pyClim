@@ -13,7 +13,7 @@ pyClim provides you with a set of Python functions so you can perform a complete
 To install the pyClim package:
 
 ```
-pip install pyclim
+pip install pyClim
 ```
 
 ## Examples
