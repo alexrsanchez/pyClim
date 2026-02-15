@@ -435,8 +435,8 @@ Another function that allows to identify trends is the :func:`timeseries_extreme
 .. code:: python
 
     ### Seasonal plots
-    var = 'Tmax'
-    units = 'ºC'
+    var = "Tmax"
+    units = "ºC"
     # Extreme values
     timeseries_extremevalues(
         df1_complete,
@@ -471,7 +471,7 @@ Use the :func:`pyclim.plot_periodaverages` function to plot the evolution of the
 .. code:: python
 
     ### Plot median value of a certain period for every year with data
-    for var in ['Tmean']:
+    for var in ["Tmean"]:
         units = units_list[var]
         plot_periodaverages(
             df1_complete,
@@ -482,7 +482,7 @@ Use the :func:`pyclim.plot_periodaverages` function to plot the evolution of the
             dt.datetime(2025, 9, 1),
             station_name,
             database,
-            plotdir + '%speriodaverages.png' %var,
+            plotdir + "%speriodaverages.png" % var,
             stat="median",
             window=10,
         )
@@ -507,29 +507,4 @@ In pyClim, the meteogram shows, for each variable, a comparison of the given yea
         station_name,
         plotdir + "/%i_meteogram_bars.png" % year_to_plot,
         plot_anoms=True,
-    )
-
-Annual cycles
--------------
-
-One more functionality of pyClim allows to plot the annual cycle of a given variable. The "criterion" parameter controls which annual cycles to highlight -beyond the selected year-, which can be the top 3 with highest or lowest final values.
-
-.. image:: ../examples/plots/Tmax_yearlycycle_colorlowest.png
-
-
-.. code:: python
-
-    colores_frios = ["#2205A8", "#1542F5", "#7397fb"]
-    plot_annual_cycles(
-        tmax_accum_anom,
-        "Tmax",
-        "ºC",
-        year_to_plot,
-        climate_normal_period,
-        database,
-        station_name,
-        colores_frios,
-        plotdir + "/Tmax_yearlycycle_colorlowest.png",
-        yearly_cycle=True,
-        criterion="lowest",
     )

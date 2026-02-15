@@ -1,12 +1,12 @@
 Metadata-Version: 2.4
-Name: pyClim
-Version: 1.0.0
+Name: pyclim
+Version: 1.0.1
 Summary: A Python package that makes analysing climatological data easy, and pretty!
 Author-email: Alejandro RodrÃ­guez SÃ¡nchez <ars.rodriguezs@gmail.com>
 Maintainer-email: Alejandro RodrÃ­guez SÃ¡nchez <ars.rodriguezs@gmail.com>
 License-Expression: MIT
-Project-URL: Homepage, https://https://github.com/alexrsanchez/pyclim
-Project-URL: Issues, https://https://github.com/alexrsanchez/pyclim/issues
+Project-URL: Homepage, https://https://github.com/alexrsanchez/pyClim
+Project-URL: Issues, https://https://github.com/alexrsanchez/pyClim/issues
 Keywords: climate,timeseries,plotting
 Classifier: Programming Language :: Python :: 3
 Classifier: Operating System :: OS Independent
@@ -36,7 +36,7 @@ pyClim provides you with a set of Python functions so you can perform a complete
 To install the pyClim package:
 
 ```
-pip install pyClim
+pip install pyclim
 ```
 
 ## Examples

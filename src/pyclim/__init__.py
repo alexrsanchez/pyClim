@@ -11,4 +11,4 @@ This package helps to:
 # ruff: noqa
 
 
-from .pyClim import *
+from .pyclim import *

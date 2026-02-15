@@ -18,7 +18,7 @@ Welcome to pyClim's documentation!
    :maxdepth: 2
    :caption: Sections:
 
-   installation
+   installation.rst
    usage
    plotting
    modules

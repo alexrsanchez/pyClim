@@ -6,33 +6,33 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plotting examples &mdash; pyClim 0.0.1 documentation</title>
+  <title>Plotting examples &mdash; pyclim 1.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
-
+  
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/documentation_options.js?v=292eb321"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="pyClim" href="modules.html" />
-    <link rel="prev" title="How to use" href="usage.html" />
+    <link rel="prev" title="How to use" href="usage.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
 
-
-
+          
+          
           <a href="index.html" class="icon icon-home">
-            pyClim
+            pyclim
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -56,7 +56,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#identifying-trends-in-a-dataset">Identifying trends in a dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#period-averages">Period averages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#meteograms">Meteograms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#annual-cycles">Annual cycles</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">pyClim</a></li>
@@ -68,7 +67,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pyClim</a>
+          <a href="index.html">pyclim</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -85,7 +84,7 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-
+             
   <section id="plotting-examples">
 <h1>Plotting examples<a class="headerlink" href="#plotting-examples" title="Link to this heading"></a></h1>
 <p>The examples below show how pyClim can be used to make plots. The examples do not cover the whole functionalities of pyClim, but a subset of the most important plotting features. This documentation will be updated progressively to include the remaining functionalities.</p>
@@ -470,8 +469,8 @@ The optional argument ‘alldatamean’, which is set to True by default, allows
 <p>Another function that allows to identify trends is the <code class="xref py py-func docutils literal notranslate"><span class="pre">timeseries_extremevalues()</span></code> function, which allows the user to plot the evolution of extreme values of a given variable. As usual, the user can control the time discretization of the extreme values. Below, an example for annual and seasonal values is given.</p>
 <img alt="_images/Annualextremevalues_Tmax_lines.png" src="_images/Annualextremevalues_Tmax_lines.png" />
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">### Seasonal plots</span>
-<span class="n">var</span> <span class="o">=</span> <span class="s1">&#39;Tmax&#39;</span>
-<span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;ºC&#39;</span>
+<span class="n">var</span> <span class="o">=</span> <span class="s2">&quot;Tmax&quot;</span>
+<span class="n">units</span> <span class="o">=</span> <span class="s2">&quot;ºC&quot;</span>
 <span class="c1"># Extreme values</span>
 <span class="n">timeseries_extremevalues</span><span class="p">(</span>
     <span class="n">df1_complete</span><span class="p">,</span>
@@ -501,7 +500,7 @@ The optional argument ‘alldatamean’, which is set to True by default, allows
 <p>Use the <code class="xref py py-func docutils literal notranslate"><span class="pre">pyclim.plot_periodaverages()</span></code> function to plot the evolution of the mean or median value of a variable between two days. In the example below, the evolution of the daily mean temperature between June 1st (included) and September 1st (not included) is plotted:</p>
 <img alt="_images/examplesTmaxperiodaverages.png" src="_images/examplesTmaxperiodaverages.png" />
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">### Plot median value of a certain period for every year with data</span>
-<span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Tmean&#39;</span><span class="p">]:</span>
+<span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Tmean&quot;</span><span class="p">]:</span>
     <span class="n">units</span> <span class="o">=</span> <span class="n">units_list</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
     <span class="n">plot_periodaverages</span><span class="p">(</span>
         <span class="n">df1_complete</span><span class="p">,</span>
@@ -512,7 +511,7 @@ The optional argument ‘alldatamean’, which is set to True by default, allows
         <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2025</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
         <span class="n">station_name</span><span class="p">,</span>
         <span class="n">database</span><span class="p">,</span>
-        <span class="n">plotdir</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">periodaverages.png&#39;</span> <span class="o">%</span><span class="n">var</span><span class="p">,</span>
+        <span class="n">plotdir</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">periodaverages.png&quot;</span> <span class="o">%</span> <span class="n">var</span><span class="p">,</span>
         <span class="n">stat</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">,</span>
         <span class="n">window</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="p">)</span>
@@ -537,27 +536,6 @@ In pyClim, the meteogram shows, for each variable, a comparison of the given yea
 </pre></div>
 </div>
 </section>
-<section id="annual-cycles">
-<h2>Annual cycles<a class="headerlink" href="#annual-cycles" title="Link to this heading"></a></h2>
-<p>One more functionality of pyClim allows to plot the annual cycle of a given variable. The “criterion” parameter controls which annual cycles to highlight -beyond the selected year-, which can be the top 3 with highest or lowest final values.</p>
-<img alt="_images/Tmax_yearlycycle_colorlowest.png" src="_images/Tmax_yearlycycle_colorlowest.png" />
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">colores_frios</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;#2205A8&quot;</span><span class="p">,</span> <span class="s2">&quot;#1542F5&quot;</span><span class="p">,</span> <span class="s2">&quot;#7397fb&quot;</span><span class="p">]</span>
-<span class="n">plot_annual_cycles</span><span class="p">(</span>
-    <span class="n">tmax_accum_anom</span><span class="p">,</span>
-    <span class="s2">&quot;Tmax&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ºC&quot;</span><span class="p">,</span>
-    <span class="n">year_to_plot</span><span class="p">,</span>
-    <span class="n">climate_normal_period</span><span class="p">,</span>
-    <span class="n">database</span><span class="p">,</span>
-    <span class="n">station_name</span><span class="p">,</span>
-    <span class="n">colores_frios</span><span class="p">,</span>
-    <span class="n">plotdir</span> <span class="o">+</span> <span class="s2">&quot;/Tmax_yearlycycle_colorlowest.png&quot;</span><span class="p">,</span>
-    <span class="n">yearly_cycle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;lowest&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
 </section>
 
 
@@ -577,7 +555,7 @@ In pyClim, the meteogram shows, for each variable, a comparison of the given yea
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-
+   
 
 </footer>
         </div>
@@ -588,7 +566,7 @@ In pyClim, the meteogram shows, for each variable, a comparison of the given yea
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
+  </script> 
 
 </body>
 </html>

@@ -14,7 +14,7 @@ import os
 # ruff: noqa
 
 # Import pyclim
-from pyClim import (
+from pyclim import (
     quality_control,
     compute_climate,
     compute_records,

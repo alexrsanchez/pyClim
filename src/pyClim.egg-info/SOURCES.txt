@@ -3,6 +3,7 @@ README.md
 pyproject.toml
 src/pyClim/__init__.py
 src/pyClim/pyClim.py
+src/pyClim/pyclim.py
 src/pyClim.egg-info/PKG-INFO
 src/pyClim.egg-info/SOURCES.txt
 src/pyClim.egg-info/dependency_links.txt
@@ -10,3 +11,8 @@ src/pyClim.egg-info/requires.txt
 src/pyClim.egg-info/top_level.txt
 src/pyclim/__init__.py
 src/pyclim/pyclim.py
+src/pyclim.egg-info/PKG-INFO
+src/pyclim.egg-info/SOURCES.txt
+src/pyclim.egg-info/dependency_links.txt
+src/pyclim.egg-info/requires.txt
+src/pyclim.egg-info/top_level.txt
